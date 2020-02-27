@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="minesweeper" version="4">
+  <OBJECT>
+    <ID name="minesweeper" mc="Standard.Project" uid="30573764-1fc5-4acb-a94b-046774788c82"/>
+    <ATTRIBUTES>
+      <ATT name="ProjectContext"></ATT>
+      <ATT name="ProjectDescr"></ATT>
+      <ATT name="Name"><![CDATA[minesweeper]]></ATT>
+      <ATT name="status">1970354901745664</ATT>
+    </ATTRIBUTES>
+    <DEPENDENCIES>
+      <COMP relation="Model">
+        <COMPID name="minesweeper" mc="Standard.Package" uid="fbfe9962-02f5-410e-adb0-604e9f900e81"/>
+      </COMP>
+      <COMP relation="DiagramRoot">
+        <COMPID name="minesweeper" mc="Infrastructure.DiagramSet" uid="d799a891-d7b7-4326-b5a9-cc8181d0ee8c"/>
+      </COMP>
+    </DEPENDENCIES>
+  </OBJECT>
+</EXT>

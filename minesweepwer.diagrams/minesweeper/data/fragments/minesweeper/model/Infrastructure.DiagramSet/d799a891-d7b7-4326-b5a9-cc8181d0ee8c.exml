@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="minesweeper" version="4">
+  <OBJECT>
+    <ID name="minesweeper" mc="Infrastructure.DiagramSet" uid="d799a891-d7b7-4326-b5a9-cc8181d0ee8c"/>
+    <PID name="minesweeper" mc="Standard.Project" uid="30573764-1fc5-4acb-a94b-046774788c82"/>
+    <ATTRIBUTES>
+      <ATT name="Name"><![CDATA[minesweeper]]></ATT>
+      <ATT name="status">1970354901745664</ATT>
+    </ATTRIBUTES>
+    <DEPENDENCIES>
+      <COMP relation="Sub">
+        <COMPID name="Auto Diagrams" mc="Infrastructure.DiagramSet" uid="355e8e3e-ac27-40b3-ad5f-c93fae5f7c25"/>
+      </COMP>
+    </DEPENDENCIES>
+  </OBJECT>
+</EXT>

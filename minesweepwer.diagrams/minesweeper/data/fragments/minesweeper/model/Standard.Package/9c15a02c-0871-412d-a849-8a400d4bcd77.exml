@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="Entities" version="4">
+  <OBJECT>
+    <ID name="Entities" mc="Standard.Package" uid="9c15a02c-0871-412d-a849-8a400d4bcd77"/>
+    <PID name="minesweeper" mc="Standard.Package" uid="fbfe9962-02f5-410e-adb0-604e9f900e81"/>
+    <ATTRIBUTES>
+      <ATT name="IsInstantiable">false</ATT>
+      <ATT name="IsAbstract">false</ATT>
+      <ATT name="IsLeaf">false</ATT>
+      <ATT name="IsRoot">false</ATT>
+      <ATT name="Visibility">Public</ATT>
+      <ATT name="Name"><![CDATA[Entities]]></ATT>
+      <ATT name="status">1970354901745664</ATT>
+    </ATTRIBUTES>
+    <DEPENDENCIES>
+      <COMP relation="OwnedElement">
+        <COMPID name="Square" mc="Standard.Class" uid="2750e9df-f168-4c98-bdd7-db31f2d970ca"/>
+      </COMP>
+    </DEPENDENCIES>
+  </OBJECT>
+</EXT>

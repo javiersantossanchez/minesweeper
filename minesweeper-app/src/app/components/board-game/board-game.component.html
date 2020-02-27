@@ -1,0 +1,5 @@
+<div *ngFor="let extItem of arrayToDraw; let i = index;" style="display: flex;">
+  <ng-container *ngFor="let innerItem of arrayToDraw; let j = index;">
+    <app-square [columnIndex]="i" [rowIndex]="j"></app-square>
+  </ng-container>
+</div>

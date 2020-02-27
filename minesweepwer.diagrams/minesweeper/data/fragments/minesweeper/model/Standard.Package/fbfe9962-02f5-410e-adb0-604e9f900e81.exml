@@ -1,0 +1,26 @@
+<?xml version="1.0" ?>
+<!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="minesweeper" version="4">
+  <OBJECT>
+    <ID name="minesweeper" mc="Standard.Package" uid="fbfe9962-02f5-410e-adb0-604e9f900e81"/>
+    <PID name="minesweeper" mc="Standard.Project" uid="30573764-1fc5-4acb-a94b-046774788c82"/>
+    <ATTRIBUTES>
+      <ATT name="IsInstantiable">false</ATT>
+      <ATT name="IsAbstract">false</ATT>
+      <ATT name="IsLeaf">false</ATT>
+      <ATT name="IsRoot">false</ATT>
+      <ATT name="Visibility">Public</ATT>
+      <ATT name="Name"><![CDATA[minesweeper]]></ATT>
+      <ATT name="status">1970354901745664</ATT>
+    </ATTRIBUTES>
+    <DEPENDENCIES>
+      <COMP relation="OwnedElement">
+        <COMPID name="Components" mc="Standard.Package" uid="a376ba8d-dd5e-4c33-bb6a-dde9b8e058c1"/>
+        <COMPID name="Entities" mc="Standard.Package" uid="9c15a02c-0871-412d-a849-8a400d4bcd77"/>
+        <COMPID name="Services" mc="Standard.Package" uid="b4ab106c-d15c-4771-9017-e3d3741b0c5c"/>
+      </COMP>
+      <COMP relation="Product">
+        <COMPID name="Package Structure Diagram (automatic)" mc="Standard.ClassDiagram" uid="f9ea8c7e-5ff5-4b23-a0d5-162e67b534d5"/>
+      </COMP>
+    </DEPENDENCIES>
+  </OBJECT>
+</EXT>

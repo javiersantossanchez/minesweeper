@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="def" version="4">
+  <OBJECT>
+    <ID name="def" mc="Standard.Package" uid="dff90d21-d858-4bc4-bc46-32a73b34048c"/>
+    <PID name="Services" mc="Standard.Package" uid="b4ab106c-d15c-4771-9017-e3d3741b0c5c"/>
+    <ATTRIBUTES>
+      <ATT name="IsInstantiable">false</ATT>
+      <ATT name="IsAbstract">false</ATT>
+      <ATT name="IsLeaf">false</ATT>
+      <ATT name="IsRoot">false</ATT>
+      <ATT name="Visibility">Public</ATT>
+      <ATT name="Name"><![CDATA[def]]></ATT>
+      <ATT name="status">1970354901745664</ATT>
+    </ATTRIBUTES>
+    <DEPENDENCIES>
+      <COMP relation="OwnedElement">
+        <COMPID name="board-game.service" mc="Standard.Class" uid="e8b6c966-83eb-4d8a-8111-d79f42a63b72"/>
+      </COMP>
+    </DEPENDENCIES>
+  </OBJECT>
+</EXT>

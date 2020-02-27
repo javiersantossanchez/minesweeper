@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+<!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="Components" version="4">
+  <OBJECT>
+    <ID name="Components" mc="Standard.Package" uid="a376ba8d-dd5e-4c33-bb6a-dde9b8e058c1"/>
+    <PID name="minesweeper" mc="Standard.Package" uid="fbfe9962-02f5-410e-adb0-604e9f900e81"/>
+    <ATTRIBUTES>
+      <ATT name="IsInstantiable">false</ATT>
+      <ATT name="IsAbstract">false</ATT>
+      <ATT name="IsLeaf">false</ATT>
+      <ATT name="IsRoot">false</ATT>
+      <ATT name="Visibility">Public</ATT>
+      <ATT name="Name"><![CDATA[Components]]></ATT>
+      <ATT name="status">1970354901745664</ATT>
+    </ATTRIBUTES>
+    <DEPENDENCIES>
+      <COMP relation="OwnedElement">
+        <COMPID name="board-game" mc="Standard.Package" uid="b2b3bd9a-e16a-43e5-a1f1-abff14a02d60"/>
+        <COMPID name="square" mc="Standard.Package" uid="2d471f74-781c-44fa-a6a0-a43f0a43e016"/>
+      </COMP>
+    </DEPENDENCIES>
+  </OBJECT>
+</EXT>

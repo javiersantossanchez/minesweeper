@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+<!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="Services" version="4">
+  <OBJECT>
+    <ID name="Services" mc="Standard.Package" uid="b4ab106c-d15c-4771-9017-e3d3741b0c5c"/>
+    <PID name="minesweeper" mc="Standard.Package" uid="fbfe9962-02f5-410e-adb0-604e9f900e81"/>
+    <ATTRIBUTES>
+      <ATT name="IsInstantiable">false</ATT>
+      <ATT name="IsAbstract">false</ATT>
+      <ATT name="IsLeaf">false</ATT>
+      <ATT name="IsRoot">false</ATT>
+      <ATT name="Visibility">Public</ATT>
+      <ATT name="Name"><![CDATA[Services]]></ATT>
+      <ATT name="status">1970354901745664</ATT>
+    </ATTRIBUTES>
+    <DEPENDENCIES>
+      <COMP relation="OwnedElement">
+        <COMPID name="Impl" mc="Standard.Package" uid="0a33d118-9c3d-4625-ac1b-464878b02fdf"/>
+        <COMPID name="def" mc="Standard.Package" uid="dff90d21-d858-4bc4-bc46-32a73b34048c"/>
+      </COMP>
+    </DEPENDENCIES>
+  </OBJECT>
+</EXT>
