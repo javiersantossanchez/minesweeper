@@ -5,4 +5,8 @@ export interface BoardDto {
 
   gameBoardLength: number;
 
+  availableMarks: number;
+
+  installedMines: number;
+
 }

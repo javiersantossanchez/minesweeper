@@ -10,7 +10,7 @@ describe('BoardGameComponent', () => {
   let component: BoardGameComponent;
   let fixture: ComponentFixture<BoardGameComponent>;
   let store: MockStore<BoardDto>;
-  const initialState: BoardDto = { gameBoard: [[],[],[]],gameBoardLength: 0};
+  const initialState: BoardDto = { gameBoard: [[],[],[]], gameBoardLength: 0, availableMarks: 0, installedMines: 0};
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

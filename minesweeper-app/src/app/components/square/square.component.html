@@ -2,10 +2,10 @@
         class="square-base"
         [ngClass]="{'square-closed': isClosedObservable | async, 'square-mine': isAMineObservable | async, 'square-marked':isMarkedObservable | async}"
         (click)="open()"
-        (contextmenu)="mark()"
+        (contextmenu)="mark($event)"
         *ngIf="(isClosedObservable | async) || (isMarkedObservable | async)">
 </button>
-<div (contextmenu)="mark()" class="square-base square-open" *ngIf="isOpenObservable |async">
+<div (contextmenu)="$event.preventDefault()" class="square-base square-open" *ngIf="isOpenObservable |async">
   <ng-container *ngIf="(numberOfMinesAroundObservable | async) > 0">
     {{numberOfMinesAroundObservable | async}}
   </ng-container>

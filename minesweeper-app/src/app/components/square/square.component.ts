@@ -51,8 +51,12 @@ export class SquareComponent implements OnInit {
     this.store.dispatch(searchByMines({ rowIndex: this.rowIndex, columnIndex: this.columnIndex}));
   }
 
-  mark(): boolean {
+  mark($event: MouseEvent): void {
+    $event.preventDefault();
     this.store.dispatch(setMark({ rowIndex: this.rowIndex, columnIndex: this.columnIndex}));
-    return false;
   }
+
+
+
+
 }

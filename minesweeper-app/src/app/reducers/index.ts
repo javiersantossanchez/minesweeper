@@ -7,14 +7,41 @@ import { Square } from '../entities/square';
 const initialState: BoardDto = {
   gameBoard: [],
   gameBoardLength: 0,
+  availableMarks: 0,
+  installedMines: 0
+
+
 };
 const testReducerInner = createReducer(initialState,
-  on(loadBoardGame, (state, action) => { return { gameBoard : action.boardGame, gameBoardLength: action.gameBoardLength };}),
-  on(searchByMines, (state, action) => {return { gameBoard : revealsNumberOfNeighborWithMine(state.gameBoard, state.gameBoard[action.rowIndex][action.columnIndex]),gameBoardLength: state.gameBoardLength };}),
-  on(setMark, (state, action) => {  state.gameBoard[action.rowIndex][action.columnIndex].setMark();
-                                    return {
+  on(loadBoardGame,
+     (state, action) => {
+                          return {
+                                    gameBoard : action.boardGame,
+                                    gameBoardLength: action.gameBoardLength,
+                                    availableMarks: action.availableMarks,
+                                    installedMines: action.installedMines
+                                  };
+                        }
+    ),
+  on(searchByMines,
+      (state, action) => {
+                          return {
+                                    gameBoard : revealsNumberOfNeighborWithMine(state.gameBoard, state.gameBoard[action.rowIndex][action.columnIndex]),
+                                    gameBoardLength: state.gameBoardLength,
+                                    availableMarks: state.availableMarks,
+                                    installedMines: state.installedMines,
+                                  };
+                          }
+    ),
+  on(setMark, (state, action) => {
+                                  if(state.availableMarks > 0) {
+                                    state.gameBoard[action.rowIndex][action.columnIndex].setMark();
+                                  }
+                                  return {
                                               gameBoard : state.gameBoard,
-                                              gameBoardLength: state.gameBoardLength
+                                              gameBoardLength: state.gameBoardLength,
+                                              availableMarks: state.availableMarks - 1,
+                                              installedMines: state.installedMines,
                                            };
                                  }
   ),

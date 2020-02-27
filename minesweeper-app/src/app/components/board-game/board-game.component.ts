@@ -20,8 +20,6 @@ export class BoardGameComponent implements OnInit {
 
   private boardGameLengthObservable: Observable<number> = this.store.select(getGameBoardLength);
 
-
-
   arrayToDraw: any[];
 
   constructor(private store: Store<BoardDto> ) {
@@ -30,9 +28,5 @@ export class BoardGameComponent implements OnInit {
   ngOnInit() {
     this.boardGameLengthObservable.subscribe(boardGameLength => { this.arrayToDraw = Array(boardGameLength); });
     this.store.dispatch(generateBoardGame());
-  }
-
-  selectOneSquare(selectedSquare: Square) {
-    //this.store.dispatch(searchByMines({selectedSquare}));
   }
 }
