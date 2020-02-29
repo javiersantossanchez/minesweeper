@@ -34,13 +34,23 @@ const testReducerInner = createReducer(initialState,
                           }
     ),
   on(setMark, (state, action) => {
-                                  if(state.availableMarks > 0) {
+                                  let availableMarks = state.availableMarks;
+                                  if (state.gameBoard[action.rowIndex][action.columnIndex].isMarked()){
                                     state.gameBoard[action.rowIndex][action.columnIndex].setMark();
+                                    availableMarks++;
+                                  } else if (
+                                      !state.gameBoard[action.rowIndex][action.columnIndex].isMarked()
+                                      &&
+                                      state.availableMarks > 0
+                                  ) {
+                                    state.gameBoard[action.rowIndex][action.columnIndex].setMark();
+                                    availableMarks--;
                                   }
+
                                   return {
                                               gameBoard : state.gameBoard,
                                               gameBoardLength: state.gameBoardLength,
-                                              availableMarks: state.availableMarks - 1,
+                                              availableMarks,
                                               installedMines: state.installedMines,
                                            };
                                  }
