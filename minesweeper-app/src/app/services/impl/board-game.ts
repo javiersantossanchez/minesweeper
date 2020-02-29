@@ -20,11 +20,11 @@ export class BoardGame implements BoardGameService {
     }
     const boardToReturn: Array<Array<Square>> = this.calculateNumOfMinesAround(this.installMines(board));
 
-    return of(boardToReturn);//.map( item => item.map( innerItem => innerItem.getSquareData())));
+    return of(boardToReturn);
   }
 
   private installMines(board: Array<Array<Square>>): Array<Array<Square>> {
-    for (let i = 1; i <= this.getBoardSize(); ) {
+    for (let i = 1; i <= this.getNumberOfMines(); ) {
       const row = Math.floor(Math.random() * Math.floor(this.getBoardSize()));
       const column = Math.floor(Math.random() * Math.floor(this.getBoardSize()));
       if (!board[row][column].isMine()) {
@@ -119,6 +119,10 @@ export class BoardGame implements BoardGameService {
 
   getBoardSize(): number {
     return 6;
+  }
+
+  getNumberOfMines(): number {
+    return 5;
   }
 
 

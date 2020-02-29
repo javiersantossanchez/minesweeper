@@ -14,4 +14,8 @@ export abstract class BoardGameService {
   abstract generateBoard(): Observable<Array<Array<Square>>>;
 
   abstract revealsNumberOfNeighborWithMine(board: Array<Array<Square>>, selectedSquare: Square): Array<Array<Square>>;
+
+  abstract getBoardSize(): number;
+
+  abstract getNumberOfMines(): number;
 }

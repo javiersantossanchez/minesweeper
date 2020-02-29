@@ -11,7 +11,7 @@ import { BoardDto } from './dtos/board-dto';
 
 describe('AppComponent', () => {
   let store: MockStore<BoardDto>;
-  const initialState: BoardDto = { gameBoard: [[],[],[]], gameBoardLength: 0};
+  const initialState: BoardDto = { gameBoard: [[],[],[]], gameBoardLength: 0, availableMarks: 0, installedMines: 0};
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
