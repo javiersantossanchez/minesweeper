@@ -1,17 +1,15 @@
-import { BoardDto } from 'src/app/dtos/board-dto';
 import { createReducer, on, Action } from '@ngrx/store';
-import { BoardDto } from '../dtos/board-dto';
+import { GameState, GAME_STATUS } from '../dtos/game-state';
 import { searchByMines, loadBoardGame, setMark} from '../actions';
 import { Square } from '../entities/square';
 
 
-const initialState: BoardDto = {
+const initialState: GameState = {
   gameBoard: [],
   gameBoardLength: 0,
   availableMarks: 0,
-  installedMines: 0
-
-
+  installedMines: 0,
+  gameStatus: GAME_STATUS.PLAYING,
 };
 const testReducerInner = createReducer(initialState,
   on(loadBoardGame,
@@ -20,13 +18,19 @@ const testReducerInner = createReducer(initialState,
                                     gameBoard : action.boardGame,
                                     gameBoardLength: action.gameBoardLength,
                                     availableMarks: action.availableMarks,
-                                    installedMines: action.installedMines
+                                    installedMines: action.installedMines,
+                                    gameStatus: state.gameStatus,
                                   };
                         }
     ),
   on(searchByMines,
-      (state, action) => { return revealsNumberOfNeighborWithMine(state, state.gameBoard[action.rowIndex][action.columnIndex])
-
+      (state, action) => {
+                            if (state.gameBoard[action.rowIndex][action.columnIndex].isMine()) {
+                              state.gameStatus = GAME_STATUS.LOSE;
+                              return explodeAllMines(state, state.gameBoard[action.rowIndex][action.columnIndex]);
+                            } else {
+                              return revealsNumberOfNeighborWithMine(state, state.gameBoard[action.rowIndex][action.columnIndex]);
+                            }
                           }
     ),
   on(setMark, (state, action) => {
@@ -51,15 +55,23 @@ const testReducerInner = createReducer(initialState,
                                            };
                                  }
   ),
-  );
+);
 
 
-export function testReducer(state: BoardDto, action: Action) {
+export function testReducer(state: GameState, action: Action) {
   return testReducerInner(state, action);
 }
 
+function explodeAllMines(gameBoard: GameState, selectedSquare: Square): GameState {
+  gameBoard.gameBoard = gameBoard.gameBoard.map(row => row.map( square => { if ( square.isMine() && !square.isMarked()) {
+                                                           square.explodeMine();
+                                                        }
+                                                                            return square;
+                                                    }));
+  return gameBoard;
+}
 
-function revealsNumberOfNeighborWithMine(gameBoard: BoardDto, selectedSquare: Square): BoardDto {
+function revealsNumberOfNeighborWithMine(gameBoard: GameState, selectedSquare: Square): GameState {
 
   const row: number = selectedSquare.getRowIndex();
   const column: number = selectedSquare.getColumnIndex();

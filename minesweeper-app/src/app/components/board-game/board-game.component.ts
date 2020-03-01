@@ -3,7 +3,7 @@ import { generateBoardGame,searchByMines } from './../../actions/index';
 import { Component, OnInit } from '@angular/core';
 import { Square } from 'src/app/entities/square';
 import { BoardGameService } from 'src/app/services/def/board-game.service';
-import { BoardDto } from 'src/app/dtos/board-dto';
+import { GameState } from 'src/app/dtos/game-state';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { getBoardGame, getGameBoardLength, isClosed } from 'src/app/selectors';
@@ -16,13 +16,13 @@ import { getBoardGame, getGameBoardLength, isClosed } from 'src/app/selectors';
 })
 export class BoardGameComponent implements OnInit {
 
-  board: Observable<Array<Array<Square>>> = this.store.select(getBoardGame);
+  //board: Observable<Array<Array<Square>>> = this.store.select(getBoardGame);
 
   private boardGameLengthObservable: Observable<number> = this.store.select(getGameBoardLength);
 
   arrayToDraw: any[];
 
-  constructor(private store: Store<BoardDto> ) {
+  constructor(private store: Store<GameState> ) {
   }
 
   ngOnInit() {

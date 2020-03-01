@@ -19,7 +19,7 @@ export class AppEffects {
                                                   boardGame: resp,
                                                   gameBoardLength: this.boardGameService.getBoardSize(),
                                                   availableMarks: this.boardGameService.getNumberOfMines(),
-                                                  installedMines: this.boardGameService.getNumberOfMines()
+                                                  installedMines: this.boardGameService.getNumberOfMines(),
                                                 })))
               )
         )

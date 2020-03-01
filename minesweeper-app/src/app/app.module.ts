@@ -11,13 +11,15 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { EffectsModule } from '@ngrx/effects';
 import { AppEffects } from './app.effects';
+import { BoardScoreComponent } from './components/board-score/board-score.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     SquareComponent,
-    BoardGameComponent
+    BoardGameComponent,
+    BoardScoreComponent
   ],
   imports: [
     BrowserModule,
