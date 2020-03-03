@@ -76,46 +76,6 @@ export class BoardGame implements BoardGameService {
     return board;
   }
 
-  revealsNumberOfNeighborWithMine(board: Array<Array<Square>>, selectedSquare: Square): Array<Array<Square>> {
-    const row: number = selectedSquare.getRowIndex();
-    const column: number = selectedSquare.getColumnIndex();
-
-    board[row][column].push();
-    if (board[row][column].getNumberOfMineAround() === 0) {
-       if (row >= 1 && board[row - 1][column].isClosed()) {
-        this.revealsNumberOfNeighborWithMine(board,  board[row - 1][column]);
-       }
-
-       if (row < this.getBoardSize() - 1 && board[row + 1][column].isClosed()) {
-        this.revealsNumberOfNeighborWithMine(board, board[row + 1][column]);
-       }
-
-       if (column >= 1 && board[row ][column - 1].isClosed()) {
-        this.revealsNumberOfNeighborWithMine(board, board[row][column - 1]);
-       }
-
-       if (column < this.getBoardSize() - 1 && board[row][column + 1].isClosed()) {
-        this.revealsNumberOfNeighborWithMine(board, board[row][column + 1]);
-       }
-
-       if ((row >= 1) && (column >= 1) && board[row - 1][column - 1].isClosed()) {
-        this.revealsNumberOfNeighborWithMine(board, board[row - 1][column - 1]);
-       }
-
-       if ((row < this.getBoardSize() - 1) && (column < this.getBoardSize() - 1) && board[row + 1][column + 1].isClosed()) {
-        this.revealsNumberOfNeighborWithMine(board, board[row + 1][column + 1]);
-       }
-
-       if ((row >= 1) && (column < this.getBoardSize() - 1) && board[row - 1][column + 1].isClosed()) {
-        this.revealsNumberOfNeighborWithMine(board, board[row - 1][column + 1]);
-      }
-
-       if ((row < this.getBoardSize() - 1) && (column >= 1) && board[row + 1][column - 1].isClosed()) {
-        this.revealsNumberOfNeighborWithMine(board, board[row + 1][column - 1]);
-      }
-    }
-    return board;
-  }
 
   getBoardSize(): number {
     return 6;

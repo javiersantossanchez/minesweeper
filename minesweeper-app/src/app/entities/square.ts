@@ -49,6 +49,10 @@ export class Square {
     }
   }
 
+  explodeMine() {
+    this.status = STATUS.BROKEN;
+  }
+
   setMark(): void {
     if (this.status !== STATUS.CLOSED) {
       throw new Error('A mark cannot be set at a square with a status different to CLOSED');
