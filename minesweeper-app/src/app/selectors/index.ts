@@ -1,5 +1,5 @@
 import { createSelector } from '@ngrx/store';
-import { GameState } from '../dtos/game-state';
+import { GameState, GAME_STATUS } from '../dtos/game-state';
 
 export const getBoardGame = createSelector(
   (state: any) => state.rootState,
@@ -39,4 +39,9 @@ export const isBroken = createSelector(
 export const numberOfMinesAround = createSelector(
   (state: any) => state.rootState,
   (state: GameState, props) => state.gameBoard[props.row][props.column].getNumberOfMineAround()
+);
+
+export const gameStatusLose = createSelector(
+  (state: any) => state.rootState,
+  (state: GameState): boolean => state.gameStatus === GAME_STATUS.LOSE
 );

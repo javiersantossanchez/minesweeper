@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { BoardScoreComponent } from './components/board-score/board-score.component';
 import { SquareComponent } from './components/square/square.component';
 import { BoardGameComponent } from './components/board-game/board-game.component';
 import { StoreModule } from '@ngrx/store';
@@ -11,7 +12,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { EffectsModule } from '@ngrx/effects';
 import { AppEffects } from './app.effects';
-import { BoardScoreComponent } from './components/board-score/board-score.component';
+
 
 
 @NgModule({

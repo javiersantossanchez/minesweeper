@@ -27,7 +27,9 @@ const testReducerInner = createReducer(initialState,
       (state, action) => {
                             if (state.gameBoard[action.rowIndex][action.columnIndex].isMine()) {
                               state.gameStatus = GAME_STATUS.LOSE;
-                              return explodeAllMines(state, state.gameBoard[action.rowIndex][action.columnIndex]);
+                              return Object.assign({},
+                                explodeAllMines(state, state.gameBoard[action.rowIndex][action.columnIndex]),
+                                 { gameStatus:GAME_STATUS.LOSE});
                             } else {
                               return revealsNumberOfNeighborWithMine(state, state.gameBoard[action.rowIndex][action.columnIndex]);
                             }

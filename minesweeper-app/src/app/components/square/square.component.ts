@@ -1,7 +1,7 @@
 import { Square } from './../../entities/square';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
-import { isClosed, isOpen, isAMine, numberOfMinesAround, isMarked,isBroken } from 'src/app/selectors';
+import { isClosed, isOpen, isAMine, numberOfMinesAround, isMarked, isBroken, } from 'src/app/selectors';
 import { Store } from '@ngrx/store';
 import { GameState } from 'src/app/dtos/game-state';
 import { searchByMines, setMark } from 'src/app/actions';

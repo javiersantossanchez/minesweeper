@@ -1,4 +1,3 @@
-import { isAMine } from './../selectors/index';
 import { Square } from '../entities/square';
 
 
