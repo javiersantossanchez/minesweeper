@@ -18,4 +18,6 @@ export interface GameState {
   installedMines: number;
 
   gameStatus: GAME_STATUS;
+
+  numberOfOpenMines: number;
 }

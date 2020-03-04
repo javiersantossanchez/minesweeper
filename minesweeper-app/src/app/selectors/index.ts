@@ -45,3 +45,8 @@ export const gameStatusLose = createSelector(
   (state: any) => state.rootState,
   (state: GameState): boolean => state.gameStatus === GAME_STATUS.LOSE
 );
+
+export const gameStatusWin = createSelector(
+  (state: any) => state.rootState,
+  (state: GameState): boolean => state.gameStatus === GAME_STATUS.WIN
+);
