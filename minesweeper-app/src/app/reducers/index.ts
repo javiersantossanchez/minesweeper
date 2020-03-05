@@ -34,9 +34,11 @@ const testReducerInner = createReducer(initialState,
                                  { gameStatus: GAME_STATUS.LOSE});
                             } else {
 
-                              const currentState: GameState = revealsNumberOfNeighborWithMine(state, state.gameBoard[action.rowIndex][action.columnIndex]);
-                              if(currentState.numberOfOpenMines + currentState.installedMines === currentState.gameBoardLength * currentState.gameBoardLength) {
-                                return Object.assign({}, currentState,{ gameStatus: GAME_STATUS.WIN});
+                              const currentState: GameState =
+                                          revealsNumberOfNeighborWithMine(state, state.gameBoard[action.rowIndex][action.columnIndex]);
+                              if ( currentState.numberOfOpenMines + currentState.installedMines ===
+                                   currentState.gameBoardLength * currentState.gameBoardLength) {
+                                     return Object.assign({}, currentState, { gameStatus: GAME_STATUS.WIN});
                               } else {
                                 return Object.assign({}, currentState);
                               }
@@ -45,7 +47,7 @@ const testReducerInner = createReducer(initialState,
     ),
   on(setMark, (state, action) => {
                                   let availableMarks = state.availableMarks;
-                                  if (state.gameBoard[action.rowIndex][action.columnIndex].isMarked()){
+                                  if (state.gameBoard[action.rowIndex][action.columnIndex].isMarked()) {
                                     state.gameBoard[action.rowIndex][action.columnIndex].setMark();
                                     availableMarks++;
                                   } else if (
@@ -87,7 +89,7 @@ function revealsNumberOfNeighborWithMine(gameBoard: GameState, selectedSquare: S
   const column: number = selectedSquare.getColumnIndex();
 
   const board: Array<Array<Square>> = gameBoard.gameBoard;
-  if(board[row][column].isMarked()) {
+  if (board[row][column].isMarked()) {
     board[row][column].setMark();
     gameBoard.availableMarks++;
   }

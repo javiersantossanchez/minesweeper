@@ -60,8 +60,4 @@ export class SquareComponent implements OnInit {
     $event.preventDefault();
     this.store.dispatch(setMark({ rowIndex: this.rowIndex, columnIndex: this.columnIndex}));
   }
-
-
-
-
 }

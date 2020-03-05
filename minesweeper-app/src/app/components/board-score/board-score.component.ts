@@ -22,7 +22,6 @@ export class BoardScoreComponent implements OnInit {
   ngOnInit() {
     this.gameStatusLoseObservable = this.store.select(gameStatusLose);
     this.gameStatusWinObservable = this.store.select(gameStatusWin);
-    this.gameStatusWinObservable.subscribe(youLose => {console.log(youLose);});
   }
 
 }
