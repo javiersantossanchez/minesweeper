@@ -10,6 +10,7 @@ const initialState: GameState = {
   availableMarks: 0,
   installedMines: 0,
   gameStatus: GAME_STATUS.PLAYING,
+  numberOfOpenMines: 0,
 };
 const testReducerInner = createReducer(initialState,
   on(loadBoardGame,
@@ -20,6 +21,7 @@ const testReducerInner = createReducer(initialState,
                                     availableMarks: action.availableMarks,
                                     installedMines: action.installedMines,
                                     gameStatus: state.gameStatus,
+                                    numberOfOpenMines: 0,
                                   };
                         }
     ),
@@ -29,15 +31,23 @@ const testReducerInner = createReducer(initialState,
                               state.gameStatus = GAME_STATUS.LOSE;
                               return Object.assign({},
                                 explodeAllMines(state, state.gameBoard[action.rowIndex][action.columnIndex]),
-                                 { gameStatus:GAME_STATUS.LOSE});
+                                 { gameStatus: GAME_STATUS.LOSE});
                             } else {
-                              return revealsNumberOfNeighborWithMine(state, state.gameBoard[action.rowIndex][action.columnIndex]);
+
+                              const currentState: GameState =
+                                          revealsNumberOfNeighborWithMine(state, state.gameBoard[action.rowIndex][action.columnIndex]);
+                              if ( currentState.numberOfOpenMines + currentState.installedMines ===
+                                   currentState.gameBoardLength * currentState.gameBoardLength) {
+                                     return Object.assign({}, currentState, { gameStatus: GAME_STATUS.WIN});
+                              } else {
+                                return Object.assign({}, currentState);
+                              }
                             }
                           }
     ),
   on(setMark, (state, action) => {
                                   let availableMarks = state.availableMarks;
-                                  if (state.gameBoard[action.rowIndex][action.columnIndex].isMarked()){
+                                  if (state.gameBoard[action.rowIndex][action.columnIndex].isMarked()) {
                                     state.gameBoard[action.rowIndex][action.columnIndex].setMark();
                                     availableMarks++;
                                   } else if (
@@ -79,10 +89,11 @@ function revealsNumberOfNeighborWithMine(gameBoard: GameState, selectedSquare: S
   const column: number = selectedSquare.getColumnIndex();
 
   const board: Array<Array<Square>> = gameBoard.gameBoard;
-  if(board[row][column].isMarked()) {
+  if (board[row][column].isMarked()) {
     board[row][column].setMark();
     gameBoard.availableMarks++;
   }
+  gameBoard.numberOfOpenMines++;
   board[row][column].push();
   if (board[row][column].getNumberOfMineAround() === 0) {
      if (row >= 1 && board[row - 1][column].isClosed()) {

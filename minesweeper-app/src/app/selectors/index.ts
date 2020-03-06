@@ -41,7 +41,7 @@ export const numberOfMinesAround = createSelector(
   (state: GameState, props) => state.gameBoard[props.row][props.column].getNumberOfMineAround()
 );
 
-export const gameStatusLose = createSelector(
+export const gameStatus = createSelector(
   (state: any) => state.rootState,
-  (state: GameState): boolean => state.gameStatus === GAME_STATUS.LOSE
+  (state: GameState, props): boolean => state.gameStatus === props.status
 );

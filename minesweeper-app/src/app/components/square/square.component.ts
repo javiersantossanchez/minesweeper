@@ -1,9 +1,9 @@
 import { Square } from './../../entities/square';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
-import { isClosed, isOpen, isAMine, numberOfMinesAround, isMarked, isBroken, } from 'src/app/selectors';
+import { isClosed, isOpen, isAMine, numberOfMinesAround, isMarked, isBroken, gameStatus, } from 'src/app/selectors';
 import { Store } from '@ngrx/store';
-import { GameState } from 'src/app/dtos/game-state';
+import { GameState, GAME_STATUS } from 'src/app/dtos/game-state';
 import { searchByMines, setMark } from 'src/app/actions';
 
 @Component({
@@ -37,6 +37,8 @@ export class SquareComponent implements OnInit {
 
    isBrokenObservable: Observable<boolean> ;
 
+   gameStatusPlayingObservable: Observable<boolean> ;
+
 
   constructor(private store: Store<GameState>) {
   }
@@ -48,6 +50,7 @@ export class SquareComponent implements OnInit {
     this.numberOfMinesAroundObservable = this.store.select(numberOfMinesAround, {row: this.rowIndex, column: this.columnIndex});
     this.isMarkedObservable = this.store.select(isMarked, {row: this.rowIndex, column: this.columnIndex});
     this.isBrokenObservable = this.store.select(isBroken, {row: this.rowIndex, column: this.columnIndex});
+    this.gameStatusPlayingObservable = this.store.select(gameStatus,{status: GAME_STATUS.PLAYING});
     this.isAMineObservable.subscribe(value => this.isAMine = value);
   }
 
@@ -60,8 +63,4 @@ export class SquareComponent implements OnInit {
     $event.preventDefault();
     this.store.dispatch(setMark({ rowIndex: this.rowIndex, columnIndex: this.columnIndex}));
   }
-
-
-
-
 }
