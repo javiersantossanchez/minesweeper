@@ -1,7 +1,6 @@
-import { gameStatusWin } from './../../selectors/index';
-import { gameStatusLose} from 'src/app/selectors';
+import { gameStatus } from './../../selectors/index';
 import { Component, OnInit } from '@angular/core';
-import { GameState } from 'src/app/dtos/game-state';
+import { GameState, GAME_STATUS } from 'src/app/dtos/game-state';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
@@ -20,8 +19,8 @@ export class BoardScoreComponent implements OnInit {
 
 
   ngOnInit() {
-    this.gameStatusLoseObservable = this.store.select(gameStatusLose);
-    this.gameStatusWinObservable = this.store.select(gameStatusWin);
+    this.gameStatusLoseObservable = this.store.select(gameStatus,{status: GAME_STATUS.LOSE});
+    this.gameStatusWinObservable = this.store.select(gameStatus,{status: GAME_STATUS.WIN});
   }
 
 }

@@ -1,14 +1,34 @@
-<button
-        class="square-base"
-        [ngClass]="{'square-closed': isClosedObservable | async, 'square-mine': isAMineObservable | async, 'square-marked':isMarkedObservable | async}"
-        (click)="open()"
-        (contextmenu)="mark($event)"
-        *ngIf="isClosedObservable | async">
-</button>
-<div (contextmenu)="$event.preventDefault()" class="square-base square-open" *ngIf="isOpenObservable |async">
-  <ng-container *ngIf="(numberOfMinesAroundObservable | async) > 0">
-    {{numberOfMinesAroundObservable | async}}
-  </ng-container>
-</div>
-<div (contextmenu)="$event.preventDefault()" class="square-base square-broken" *ngIf="isBrokenObservable |async">
-</div>
+<ng-container *ngIf="(gameStatusPlayingObservable | async); then playing; else gameOver">
+
+</ng-container>
+
+<ng-template #playing>
+  <button
+    class="square-base"
+    [ngClass]="{'square-closed': isClosedObservable | async, 'square-mine': isAMineObservable | async, 'square-marked':isMarkedObservable | async}"
+    (click)="open()"
+    (contextmenu)="mark($event)"
+    *ngIf="isClosedObservable | async">
+  </button>
+  <div (contextmenu)="$event.preventDefault()" class="square-base square-open" *ngIf="isOpenObservable |async">
+    <ng-container *ngIf="(numberOfMinesAroundObservable | async) > 0">
+      {{numberOfMinesAroundObservable | async}}
+    </ng-container>
+  </div>
+</ng-template>
+
+
+<ng-template #gameOver>
+  <div  (contextmenu)="$event.preventDefault()"
+      class="square-base"
+      [ngClass]="{'square-closed': isClosedObservable | async,
+                  'square-marked':isMarkedObservable | async,
+                  'square-broken':isBrokenObservable |async,
+                  'square-open':isOpenObservable |async}"
+      >
+      <ng-container *ngIf="(numberOfMinesAroundObservable | async) > 0 && isOpenObservable |async">
+        {{numberOfMinesAroundObservable | async}}
+      </ng-container>
+
+  </div>
+</ng-template>
