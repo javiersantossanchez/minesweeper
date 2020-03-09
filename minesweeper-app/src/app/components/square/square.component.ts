@@ -1,66 +1,56 @@
-import { Square } from './../../entities/square';
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Observable } from 'rxjs';
-import { isClosed, isOpen, isAMine, numberOfMinesAround, isMarked, isBroken, gameStatus, } from 'src/app/selectors';
-import { Store } from '@ngrx/store';
-import { GameState, GAME_STATUS } from 'src/app/dtos/game-state';
-import { searchByMines, setMark } from 'src/app/actions';
+import { Square } from "./../../entities/square";
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { Observable } from "rxjs";
+import {
+  isClosed,
+  squareStatusSelector,
+  isAMine,
+  numberOfMinesAround,
+  isMarked,
+  isBroken,
+  gameStatus
+} from "src/app/selectors";
+import { Store } from "@ngrx/store";
+import { GameState, GAME_STATUS } from "src/app/dtos/game-state";
+import { searchMinesAction, setMarkOnMineAction } from "src/app/actions";
+import { SquareState } from "src/app/dtos/square-state-dto";
 
 @Component({
-  selector: 'app-square',
-  templateUrl: './square.component.html',
-  styleUrls: ['./square.component.sass']
+  selector: "app-square",
+  templateUrl: "./square.component.html",
+  styleUrls: ["./square.component.sass"]
 })
 export class SquareComponent implements OnInit {
-
-
   @Input()
   rowIndex: number;
 
   @Input()
   columnIndex: number;
 
-  @Output()
-  selectEvent: EventEmitter<Square> = new EventEmitter<Square>();
+  @Input()
+  isPlaying: boolean;
 
-  private isAMine: boolean;
+  squareStatusObservable: Observable<SquareState>;
 
-   isClosedObservable: Observable<boolean> ;
-
-   isOpenObservable: Observable<boolean> ;
-
-   isAMineObservable: Observable<boolean> ;
-
-   numberOfMinesAroundObservable: Observable<number> ;
-
-   isMarkedObservable: Observable<boolean> ;
-
-   isBrokenObservable: Observable<boolean> ;
-
-   gameStatusPlayingObservable: Observable<boolean> ;
-
-
-  constructor(private store: Store<GameState>) {
-  }
+  constructor(private store: Store<GameState>) {}
 
   ngOnInit() {
-    this.isClosedObservable = this.store.select(isClosed, {row: this.rowIndex, column: this.columnIndex});
-    this.isOpenObservable = this.store.select(isOpen, {row: this.rowIndex, column: this.columnIndex});
-    this.isAMineObservable = this.store.select(isAMine, {row: this.rowIndex, column: this.columnIndex});
-    this.numberOfMinesAroundObservable = this.store.select(numberOfMinesAround, {row: this.rowIndex, column: this.columnIndex});
-    this.isMarkedObservable = this.store.select(isMarked, {row: this.rowIndex, column: this.columnIndex});
-    this.isBrokenObservable = this.store.select(isBroken, {row: this.rowIndex, column: this.columnIndex});
-    this.gameStatusPlayingObservable = this.store.select(gameStatus,{status: GAME_STATUS.PLAYING});
-    this.isAMineObservable.subscribe(value => this.isAMine = value);
+    this.squareStatusObservable = this.store.select(squareStatusSelector, {
+      row: this.rowIndex,
+      column: this.columnIndex
+    });
   }
 
-
   open(): void {
-      this.store.dispatch(searchByMines({ rowIndex: this.rowIndex, columnIndex: this.columnIndex}));
+    this.store.dispatch(
+      searchMinesAction({ rowIndex: this.rowIndex, columnIndex: this.columnIndex })
+    );
   }
 
   mark($event: MouseEvent): void {
     $event.preventDefault();
-    this.store.dispatch(setMark({ rowIndex: this.rowIndex, columnIndex: this.columnIndex}));
+    this.store.dispatch(
+      setMarkOnMineAction({ rowIndex: this.rowIndex, columnIndex: this.columnIndex })
+    );
   }
 }

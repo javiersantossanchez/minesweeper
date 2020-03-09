@@ -41,6 +41,18 @@ export class Square {
     return this.status === STATUS.BROKEN;
   }
 
+  isMine(): boolean {
+    return this.mine;
+  }
+
+  getNumberOfMineAround(): number {
+   return this.numberOfMinesAround;
+  }
+
+  setNumberOfMinesAround(numberOfMineAround: number): void {
+    this.numberOfMinesAround = numberOfMineAround;
+  }
+
   push(): void {
     if (this.isMine()) {
       this.status = STATUS.BROKEN;
@@ -63,19 +75,6 @@ export class Square {
   installMine(): void {
     this.mine = true;
   }
-
-  isMine(): boolean {
-    return this.mine;
-  }
-
-  setNumberOfMinesAround(numberOfMineAround: number): void {
-    this.numberOfMinesAround = numberOfMineAround;
-  }
-
-  getNumberOfMineAround(): number {
-   return this.numberOfMinesAround;
-  }
-
 
 }
 
