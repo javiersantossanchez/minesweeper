@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType} from '@ngrx/effects';
-import { generateBoardGame, loadBoardGame } from './actions';
+import { generateGameBoardAction, loadBoardGameAction } from './actions';
 import { map, mergeMap } from 'rxjs/operators';
 import { BoardGameService } from './services/def/board-game.service';
 
@@ -12,10 +12,10 @@ export class AppEffects {
 
    generateBoard = createEffect(
         () => this.actions.pipe(
-              ofType(generateBoardGame),
+              ofType(generateGameBoardAction),
               mergeMap( () =>
                 this.boardGameService.generateBoard()
-                .pipe(map( resp => loadBoardGame({
+                .pipe(map( resp =>  loadBoardGameAction({
                                                   boardGame: resp,
                                                   gameBoardLength: this.boardGameService.getBoardSize(),
                                                   availableMarks: this.boardGameService.getNumberOfMines(),

@@ -1,34 +1,38 @@
-<ng-container *ngIf="(gameStatusPlayingObservable | async); then playing; else gameOver">
+<ng-container *ngIf="isPlaying; then playing; else gameOver">
 
 </ng-container>
 
-<ng-template #playing>
-  <button
-    class="square-base"
-    [ngClass]="{'square-closed': isClosedObservable | async, 'square-mine': isAMineObservable | async, 'square-marked':isMarkedObservable | async}"
+<ng-template #playing >
+  <ng-container *ngLet="(squareStatusObservable |async) as squareStatus">
+    <button
+    class="square-base square-clickable"
+    [ngClass]="{'square-closed': squareStatus.isClosed, 'square-mine': squareStatus.isMine, 'square-marked':squareStatus.isMarked}"
     (click)="open()"
     (contextmenu)="mark($event)"
-    *ngIf="isClosedObservable | async">
+    *ngIf="squareStatus.isClosed">
   </button>
-  <div (contextmenu)="$event.preventDefault()" class="square-base square-open" *ngIf="isOpenObservable |async">
-    <ng-container *ngIf="(numberOfMinesAroundObservable | async) > 0">
-      {{numberOfMinesAroundObservable | async}}
+  <div (contextmenu)="$event.preventDefault()" class="square-base square-open" *ngIf="squareStatus.isOpen">
+    <ng-container *ngIf="squareStatus.numberOfMinesAround > 0">
+      {{squareStatus.numberOfMinesAround}}
     </ng-container>
   </div>
+  </ng-container>
 </ng-template>
 
 
 <ng-template #gameOver>
-  <div  (contextmenu)="$event.preventDefault()"
-      class="square-base"
-      [ngClass]="{'square-closed': isClosedObservable | async,
-                  'square-marked':isMarkedObservable | async,
-                  'square-broken':isBrokenObservable |async,
-                  'square-open':isOpenObservable |async}"
-      >
-      <ng-container *ngIf="(numberOfMinesAroundObservable | async) > 0 && isOpenObservable |async">
-        {{numberOfMinesAroundObservable | async}}
-      </ng-container>
+  <ng-container *ngLet="(squareStatusObservable |async) as squareStatus">
+    <div (contextmenu)="$event.preventDefault()"
+        class="square-base"
+        [ngClass]="{'square-closed': squareStatus.isClosed,
+                    'square-marked':squareStatus.isMarked,
+                    'square-broken':squareStatus.isBroken,
+                    'square-open':squareStatus.isOpen}"
+        >
+        <ng-container *ngIf="squareStatus.numberOfMinesAround > 0 && squareStatus.isOpen">
+          {{squareStatus.numberOfMinesAround}}
+        </ng-container>
 
-  </div>
+    </div>
+</ng-container>
 </ng-template>

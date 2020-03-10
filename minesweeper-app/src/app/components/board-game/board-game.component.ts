@@ -1,12 +1,9 @@
-import { async } from '@angular/core/testing';
-import { generateBoardGame,searchByMines } from './../../actions/index';
+import { generateGameBoardAction } from './../../actions/index';
 import { Component, OnInit } from '@angular/core';
-import { Square } from 'src/app/entities/square';
-import { BoardGameService } from 'src/app/services/def/board-game.service';
-import { GameState } from 'src/app/dtos/game-state';
-import { Store, select } from '@ngrx/store';
+import { GameState, GAME_STATUS } from 'src/app/dtos/game-state';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { getBoardGame, getGameBoardLength, isClosed } from 'src/app/selectors';
+import { getGameBoardLength, gameStatus } from 'src/app/selectors';
 
 
 @Component({
@@ -16,9 +13,9 @@ import { getBoardGame, getGameBoardLength, isClosed } from 'src/app/selectors';
 })
 export class BoardGameComponent implements OnInit {
 
-  //board: Observable<Array<Array<Square>>> = this.store.select(getBoardGame);
-
   private boardGameLengthObservable: Observable<number> = this.store.select(getGameBoardLength);
+
+  gameStatusPlayingObservable: Observable<boolean> ;
 
   arrayToDraw: any[];
 
@@ -26,7 +23,8 @@ export class BoardGameComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.gameStatusPlayingObservable = this.store.select(gameStatus, {status: GAME_STATUS.PLAYING});
     this.boardGameLengthObservable.subscribe(boardGameLength => { this.arrayToDraw = Array(boardGameLength); });
-    this.store.dispatch(generateBoardGame());
+    this.store.dispatch(generateGameBoardAction());
   }
 }

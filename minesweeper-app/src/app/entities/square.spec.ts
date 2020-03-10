@@ -1,4 +1,4 @@
-import { setMark } from './../actions/index';
+import { setMarkOnMineAction } from './../actions/index';
 import { Square, STATUS } from './square';
 
 describe('Square', () => {

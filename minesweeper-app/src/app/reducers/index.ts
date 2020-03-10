@@ -1,8 +1,7 @@
 import { createReducer, on, Action } from '@ngrx/store';
 import { GameState, GAME_STATUS } from '../dtos/game-state';
-import { searchByMines, loadBoardGame, setMark} from '../actions';
+import { searchMinesAction, loadBoardGameAction, setMarkOnMineAction } from '../actions';
 import { Square } from '../entities/square';
-
 
 const initialState: GameState = {
   gameBoard: [],
@@ -10,81 +9,81 @@ const initialState: GameState = {
   availableMarks: 0,
   installedMines: 0,
   gameStatus: GAME_STATUS.PLAYING,
-  numberOfOpenMines: 0,
+  numberOfOpenMines: 0
 };
-const testReducerInner = createReducer(initialState,
-  on(loadBoardGame,
-     (state, action) => {
-                          return {
-                                    gameBoard : action.boardGame,
-                                    gameBoardLength: action.gameBoardLength,
-                                    availableMarks: action.availableMarks,
-                                    installedMines: action.installedMines,
-                                    gameStatus: state.gameStatus,
-                                    numberOfOpenMines: 0,
-                                  };
-                        }
-    ),
-  on(searchByMines,
-      (state, action) => {
-                            if (state.gameBoard[action.rowIndex][action.columnIndex].isMine()) {
-                              state.gameStatus = GAME_STATUS.LOSE;
-                              return Object.assign({},
-                                explodeAllMines(state, state.gameBoard[action.rowIndex][action.columnIndex]),
-                                 { gameStatus: GAME_STATUS.LOSE});
-                            } else {
-
-                              const currentState: GameState =
-                                          revealsNumberOfNeighborWithMine(state, state.gameBoard[action.rowIndex][action.columnIndex]);
-                              if ( currentState.numberOfOpenMines + currentState.installedMines ===
-                                   currentState.gameBoardLength * currentState.gameBoardLength) {
-                                     return Object.assign({}, currentState, { gameStatus: GAME_STATUS.WIN});
-                              } else {
-                                return Object.assign({}, currentState);
-                              }
-                            }
-                          }
-    ),
-  on(setMark, (state, action) => {
-                                  let availableMarks = state.availableMarks;
-                                  if (state.gameBoard[action.rowIndex][action.columnIndex].isMarked()) {
-                                    state.gameBoard[action.rowIndex][action.columnIndex].setMark();
-                                    availableMarks++;
-                                  } else if (
-                                      !state.gameBoard[action.rowIndex][action.columnIndex].isMarked()
-                                      &&
-                                      state.availableMarks > 0
-                                  ) {
-                                    state.gameBoard[action.rowIndex][action.columnIndex].setMark();
-                                    availableMarks--;
-                                  }
-
-                                  return {
-                                              gameBoard : state.gameBoard,
-                                              gameBoardLength: state.gameBoardLength,
-                                              availableMarks,
-                                              installedMines: state.installedMines,
-                                           };
-                                 }
-  ),
+const gameReducer = createReducer(initialState,
+  on(loadBoardGameAction, (state, action) => {
+    return Object.assign(
+        {},
+        state,
+        {
+          gameBoard: action.boardGame,
+          gameBoardLength: action.gameBoardLength,
+          availableMarks: action.availableMarks,
+          installedMines: action.installedMines,
+        }
+    );
+  }),
+  on(searchMinesAction, (state, action) => {
+    if (state.gameBoard[action.rowIndex][action.columnIndex].isMine()) {
+      state.gameStatus = GAME_STATUS.LOSE;
+      return Object.assign(
+        {},
+        explodeAllMines(
+          state
+        )
+      );
+    } else {
+      const currentState: GameState = revealsNumberOfNeighborWithMine(
+        state,
+        state.gameBoard[action.rowIndex][action.columnIndex]
+      );
+      if (
+        currentState.numberOfOpenMines + currentState.installedMines ===
+        currentState.gameBoardLength * currentState.gameBoardLength
+      ) {
+        return Object.assign({}, currentState, { gameStatus: GAME_STATUS.WIN });
+      } else {
+        return Object.assign({}, currentState);
+      }
+    }
+  }),
+  on(setMarkOnMineAction, (state, action) => {
+    let availableMarks = state.availableMarks;
+    if (state.gameBoard[action.rowIndex][action.columnIndex].isMarked()) {
+      state.gameBoard[action.rowIndex][action.columnIndex].setMark();
+      availableMarks++;
+    } else if (
+      !state.gameBoard[action.rowIndex][action.columnIndex].isMarked() &&
+      state.availableMarks > 0
+    ) {
+      state.gameBoard[action.rowIndex][action.columnIndex].setMark();
+      availableMarks--;
+    }
+    return Object.assign({}, state, { availableMarks });
+  })
 );
 
-
-export function testReducer(state: GameState, action: Action) {
-  return testReducerInner(state, action);
+export function getGameReducer(state: GameState, action: Action) {
+  return gameReducer(state, action);
 }
 
-function explodeAllMines(gameBoard: GameState, selectedSquare: Square): GameState {
-  gameBoard.gameBoard = gameBoard.gameBoard.map(row => row.map( square => { if ( square.isMine() && !square.isMarked()) {
-                                                           square.explodeMine();
-                                                        }
-                                                                            return square;
-                                                    }));
+function explodeAllMines(gameBoard: GameState): GameState {
+  gameBoard.gameBoard = gameBoard.gameBoard.map(row =>
+    row.map(square => {
+      if (square.isMine() && !square.isMarked()) {
+        square.explodeMine();
+      }
+      return square;
+    })
+  );
   return gameBoard;
 }
 
-function revealsNumberOfNeighborWithMine(gameBoard: GameState, selectedSquare: Square): GameState {
-
+function revealsNumberOfNeighborWithMine(
+  gameBoard: GameState,
+  selectedSquare: Square
+): GameState {
   const row: number = selectedSquare.getRowIndex();
   const column: number = selectedSquare.getColumnIndex();
 
@@ -96,37 +95,49 @@ function revealsNumberOfNeighborWithMine(gameBoard: GameState, selectedSquare: S
   gameBoard.numberOfOpenMines++;
   board[row][column].push();
   if (board[row][column].getNumberOfMineAround() === 0) {
-     if (row >= 1 && board[row - 1][column].isClosed()) {
-      revealsNumberOfNeighborWithMine(gameBoard,  board[row - 1][column]);
-     }
+    if (row >= 1 && board[row - 1][column].isClosed()) {
+      revealsNumberOfNeighborWithMine(gameBoard, board[row - 1][column]);
+    }
 
-     if (row < board.length - 1 && board[row + 1][column].isClosed()) {
+    if (row < board.length - 1 && board[row + 1][column].isClosed()) {
       revealsNumberOfNeighborWithMine(gameBoard, board[row + 1][column]);
-     }
+    }
 
-     if (column >= 1 && board[row ][column - 1].isClosed()) {
+    if (column >= 1 && board[row][column - 1].isClosed()) {
       revealsNumberOfNeighborWithMine(gameBoard, board[row][column - 1]);
-     }
+    }
 
-     if (column < board.length - 1 && board[row][column + 1].isClosed()) {
+    if (column < board.length - 1 && board[row][column + 1].isClosed()) {
       revealsNumberOfNeighborWithMine(gameBoard, board[row][column + 1]);
-     }
+    }
 
-     if ((row >= 1) && (column >= 1) && board[row - 1][column - 1].isClosed()) {
+    if (row >= 1 && column >= 1 && board[row - 1][column - 1].isClosed()) {
       revealsNumberOfNeighborWithMine(gameBoard, board[row - 1][column - 1]);
-     }
+    }
 
-     if ((row < board.length - 1) && (column < board.length - 1) && board[row + 1][column + 1].isClosed()) {
+    if (
+      row < board.length - 1 &&
+      column < board.length - 1 &&
+      board[row + 1][column + 1].isClosed()
+    ) {
       revealsNumberOfNeighborWithMine(gameBoard, board[row + 1][column + 1]);
-     }
+    }
 
-     if ((row >= 1) && (column < board.length - 1) && board[row - 1][column + 1].isClosed()) {
+    if (
+      row >= 1 &&
+      column < board.length - 1 &&
+      board[row - 1][column + 1].isClosed()
+    ) {
       revealsNumberOfNeighborWithMine(gameBoard, board[row - 1][column + 1]);
     }
 
-     if ((row < board.length - 1) && (column >= 1) && board[row + 1][column - 1].isClosed()) {
+    if (
+      row < board.length - 1 &&
+      column >= 1 &&
+      board[row + 1][column - 1].isClosed()
+    ) {
       revealsNumberOfNeighborWithMine(gameBoard, board[row + 1][column - 1]);
     }
   }
-  return  gameBoard;
+  return gameBoard;
 }

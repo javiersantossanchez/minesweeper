@@ -7,12 +7,12 @@ import { BoardScoreComponent } from './components/board-score/board-score.compon
 import { SquareComponent } from './components/square/square.component';
 import { BoardGameComponent } from './components/board-game/board-game.component';
 import { StoreModule } from '@ngrx/store';
-import { testReducer } from './reducers';
+import { getGameReducer } from './reducers';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { EffectsModule } from '@ngrx/effects';
 import { AppEffects } from './app.effects';
-
+import { NgLetModule } from '@ngrx-utils/store';
 
 
 @NgModule({
@@ -25,9 +25,10 @@ import { AppEffects } from './app.effects';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    StoreModule.forRoot({rootState: testReducer}),
+    StoreModule.forRoot({rootState: getGameReducer}),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
     EffectsModule.forRoot([AppEffects]),
+    NgLetModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
