@@ -15,7 +15,7 @@ export class AppEffects {
               ofType(generateGameBoardAction),
               mergeMap( () =>
                 this.boardGameService.generateBoard()
-                .pipe(map( resp => loadBoardGameAction({
+                .pipe(map( resp =>  loadBoardGameAction({
                                                   boardGame: resp,
                                                   gameBoardLength: this.boardGameService.getBoardSize(),
                                                   availableMarks: this.boardGameService.getNumberOfMines(),

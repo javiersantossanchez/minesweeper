@@ -1,7 +1,7 @@
-import { createReducer, on, Action } from "@ngrx/store";
-import { GameState, GAME_STATUS } from "../dtos/game-state";
-import { searchMinesAction, loadBoardGameAction, setMarkOnMineAction } from "../actions";
-import { Square } from "../entities/square";
+import { createReducer, on, Action } from '@ngrx/store';
+import { GameState, GAME_STATUS } from '../dtos/game-state';
+import { searchMinesAction, loadBoardGameAction, setMarkOnMineAction } from '../actions';
+import { Square } from '../entities/square';
 
 const initialState: GameState = {
   gameBoard: [],
@@ -11,17 +11,18 @@ const initialState: GameState = {
   gameStatus: GAME_STATUS.PLAYING,
   numberOfOpenMines: 0
 };
-const gameReducer = createReducer(
-  initialState,
+const gameReducer = createReducer(initialState,
   on(loadBoardGameAction, (state, action) => {
-    return {
-      gameBoard: action.boardGame,
-      gameBoardLength: action.gameBoardLength,
-      availableMarks: action.availableMarks,
-      installedMines: action.installedMines,
-      gameStatus: state.gameStatus,
-      numberOfOpenMines: 0
-    };
+    return Object.assign(
+        {},
+        state,
+        {
+          gameBoard: action.boardGame,
+          gameBoardLength: action.gameBoardLength,
+          availableMarks: action.availableMarks,
+          installedMines: action.installedMines,
+        }
+    );
   }),
   on(searchMinesAction, (state, action) => {
     if (state.gameBoard[action.rowIndex][action.columnIndex].isMine()) {
@@ -29,10 +30,8 @@ const gameReducer = createReducer(
       return Object.assign(
         {},
         explodeAllMines(
-          state,
-          state.gameBoard[action.rowIndex][action.columnIndex]
-        ),
-        { gameStatus: GAME_STATUS.LOSE }
+          state
+        )
       );
     } else {
       const currentState: GameState = revealsNumberOfNeighborWithMine(
@@ -69,10 +68,7 @@ export function getGameReducer(state: GameState, action: Action) {
   return gameReducer(state, action);
 }
 
-function explodeAllMines(
-  gameBoard: GameState,
-  selectedSquare: Square
-): GameState {
+function explodeAllMines(gameBoard: GameState): GameState {
   gameBoard.gameBoard = gameBoard.gameBoard.map(row =>
     row.map(square => {
       if (square.isMine() && !square.isMarked()) {

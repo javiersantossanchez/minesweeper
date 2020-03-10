@@ -1,12 +1,9 @@
-import { async } from '@angular/core/testing';
-import { generateGameBoardAction,searchMinesAction } from './../../actions/index';
+import { generateGameBoardAction } from './../../actions/index';
 import { Component, OnInit } from '@angular/core';
-import { Square } from 'src/app/entities/square';
-import { BoardGameService } from 'src/app/services/def/board-game.service';
 import { GameState, GAME_STATUS } from 'src/app/dtos/game-state';
-import { Store, select } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { getBoardGame, getGameBoardLength, isClosed, gameStatus } from 'src/app/selectors';
+import { getGameBoardLength, gameStatus } from 'src/app/selectors';
 
 
 @Component({
