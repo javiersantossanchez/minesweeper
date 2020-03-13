@@ -1,3 +1,4 @@
+import { timeOutAction } from './../actions/index';
 import { createReducer, on, Action } from '@ngrx/store';
 import { GameState, GAME_STATUS } from '../dtos/game-state';
 import { searchMinesAction, loadBoardGameAction, setMarkOnMineAction } from '../actions';
@@ -61,7 +62,16 @@ const gameReducer = createReducer(initialState,
       availableMarks--;
     }
     return Object.assign({}, state, { availableMarks });
-  })
+  }),
+  on(timeOutAction, (state, action) => {
+      state.gameStatus = GAME_STATUS.LOSE;
+      return Object.assign(
+        {},
+        explodeAllMines(
+          state
+        )
+      );
+  }),
 );
 
 export function getGameReducer(state: GameState, action: Action) {

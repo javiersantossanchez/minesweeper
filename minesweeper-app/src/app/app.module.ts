@@ -13,6 +13,7 @@ import { environment } from '../environments/environment';
 import { EffectsModule } from '@ngrx/effects';
 import { AppEffects } from './app.effects';
 import { NgLetModule } from '@ngrx-utils/store';
+import { CountdownModule } from 'ngx-countdown';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import { NgLetModule } from '@ngrx-utils/store';
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
     EffectsModule.forRoot([AppEffects]),
     NgLetModule,
+    CountdownModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
