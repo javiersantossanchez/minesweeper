@@ -1,10 +1,77 @@
 
 import { BoardGameService } from 'src/app/services/def/board-game.service';
-import { Square ,STATUS} from 'src/app/entities/square';
+import { Square } from 'src/app/entities/square';
 import { Observable, of } from 'rxjs';
+import { SearchMinesResult } from 'src/app/dtos/search-mines-result-dto';
 
 
 export class BoardGame implements BoardGameService {
+
+  searchMines(board: Square[][], selectedSquare: Square): Observable<SearchMinesResult> {
+    let searchMineResult = new SearchMinesResult(board, 0, 0);
+    searchMineResult = this.iterativeSearch(searchMineResult, selectedSquare);
+    console.log(searchMineResult);
+    return of(searchMineResult);
+  }
+
+  private iterativeSearch(searchMineDto: SearchMinesResult, selectedSquare: Square): SearchMinesResult {
+
+    const row: number = selectedSquare.getRowIndex();
+    const column: number = selectedSquare.getColumnIndex();
+
+    if (searchMineDto.isMarked(row, column)) {
+      searchMineDto.setMark(row, column);
+      searchMineDto.increaseNumberOfMarkRemoved();
+    }
+    searchMineDto.increaseNumberOfSquareOpened();
+    searchMineDto.push(row, column);
+    if (searchMineDto.getNumberOfMineAround(row, column) === 0) {
+      if (row >= 1 && searchMineDto.isClosed(row - 1, column)) {
+        this.iterativeSearch(searchMineDto, searchMineDto.getSquare(row - 1, column));
+      }
+
+      if (row < searchMineDto.getLength() - 1 && searchMineDto.isClosed(row + 1, column)) {
+        this.iterativeSearch(searchMineDto, searchMineDto.getSquare(row + 1, column));
+      }
+
+      if (column >= 1 && searchMineDto.isClosed(row, column - 1)) {
+        this.iterativeSearch(searchMineDto, searchMineDto.getSquare(row, column - 1));
+      }
+
+      if (column < searchMineDto.getLength() - 1 && searchMineDto.isClosed(row, column + 1)) {
+        this.iterativeSearch(searchMineDto, searchMineDto.getSquare(row, column + 1));
+      }
+
+      if (row >= 1 && column >= 1 && searchMineDto.isClosed(row - 1, column - 1)) {
+        this.iterativeSearch(searchMineDto, searchMineDto.getSquare(row - 1, column - 1));
+      }
+
+      if (
+        row < searchMineDto.getLength() - 1 &&
+        column < searchMineDto.getLength() - 1 &&
+        searchMineDto.isClosed(row + 1, column + 1)
+      ) {
+        this.iterativeSearch(searchMineDto, searchMineDto.getSquare(row + 1, column + 1));
+      }
+
+      if (
+        row >= 1 &&
+        column < searchMineDto.getLength() - 1 &&
+        searchMineDto.isClosed(row - 1, column + 1)
+      ) {
+        this.iterativeSearch(searchMineDto, searchMineDto.getSquare(row - 1, column + 1));
+      }
+
+      if (
+        row < searchMineDto.getLength() - 1 &&
+        column >= 1 &&
+        searchMineDto.isClosed(row + 1, column - 1)
+      ) {
+        this.iterativeSearch(searchMineDto, searchMineDto.getSquare(row + 1, column - 1));
+      }
+    }
+    return searchMineDto;
+  }
 
   generateBoard(): Observable<Array<Array<Square>>> {
     const board: Array<Array<Square>> = new Array<Array<Square>>();

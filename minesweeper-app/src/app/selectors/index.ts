@@ -1,6 +1,7 @@
 import { SquareState } from './../dtos/square-state-dto';
 import { createSelector } from '@ngrx/store';
 import { GameState, } from '../dtos/game-state';
+import { Square } from '../entities/square';
 
 export const getBoardGame = createSelector(
   (state: any) => state.rootState,
