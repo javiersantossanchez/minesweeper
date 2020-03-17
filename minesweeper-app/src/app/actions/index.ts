@@ -15,7 +15,15 @@ export const loadBoardGameAction = createAction('[board-game] load', props<{
  * Action used to unlock the squares, starting from a initial square
  */
 export const searchMinesSuccessfulAction =
-              createAction('[board-game] search Successful', props<{ boardGame: Array<Array<Square>>,  numberOfMarkRemoved: number, numberOfNewSquareOpen: number }>());
+      createAction('[board-game] search Successful', props<{
+                                                              boardGame: Array<Array<Square>>,
+                                                              numberOfMarkRemoved: number,
+                                                              numberOfNewSquareOpen: number
+                                                            }>());
+
+export const explodeAllMinesAction =
+      createAction('[board-game] Explode All Mines', props<{boardGame: Array<Array<Square>>,}>());
+
 
 /**
  * Action used to unlock the squares, starting from a initial square

@@ -1,9 +1,8 @@
 import { gameStatus } from './../selectors/index';
-import { timeOutAction, searchMinesSuccessfulAction } from './../actions/index';
+import { timeOutAction, searchMinesSuccessfulAction, explodeAllMinesAction } from './../actions/index';
 import { createReducer, on, Action } from '@ngrx/store';
 import { GameState, GAME_STATUS } from '../dtos/game-state';
 import { searchMinesAction, loadBoardGameAction, setMarkOnMineAction } from '../actions';
-import { Square } from '../entities/square';
 
 const initialState: GameState = {
   gameBoard: [],
@@ -26,6 +25,9 @@ const gameReducer = createReducer(initialState,
         }
     );
   }),
+  on(explodeAllMinesAction, (state, action) => {
+    return Object.assign({}, state, { gameBoard: action.boardGame, gameStatus: GAME_STATUS.LOSE});
+}),
   on(searchMinesSuccessfulAction, (state, action) => {
       const newNumberOfOpenSquare = state.numberOfOpenMines + action.numberOfNewSquareOpen;
       let newGameStatus = state.gameStatus;
@@ -54,31 +56,9 @@ const gameReducer = createReducer(initialState,
     }
     return Object.assign({}, state, { availableMarks });
   }),
-  on(timeOutAction, (state, action) => {
-      state.gameStatus = GAME_STATUS.LOSE;
-      return Object.assign(
-        {},
-        explodeAllMines(
-          state
-        )
-      );
-  }),
 );
 
 export function getGameReducer(state: GameState, action: Action) {
   return gameReducer(state, action);
 }
-
-function explodeAllMines(gameBoard: GameState): GameState {
-  gameBoard.gameBoard = gameBoard.gameBoard.map(row =>
-    row.map(square => {
-      if (square.isMine() && !square.isMarked()) {
-        square.explodeMine();
-      }
-      return square;
-    })
-  );
-  return gameBoard;
-}
-
 

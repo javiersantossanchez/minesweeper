@@ -1,11 +1,23 @@
 
-import { BoardGameService } from 'src/app/services/def/board-game.service';
-import { Square } from 'src/app/entities/square';
 import { Observable, of } from 'rxjs';
 import { SearchMinesResult } from 'src/app/dtos/search-mines-result-dto';
+import { Square } from 'src/app/entities/square';
+import { BoardGameService } from 'src/app/services/def/board-game.service';
 
 
 export class BoardGame implements BoardGameService {
+
+  explodeAllMines(board: Square[][]): Observable<Square[][]> {
+    const result: Square[][] = board.map(row =>
+      row.map(square => {
+        if (square.isMine() && !square.isMarked()) {
+          square.explodeMine();
+        }
+        return square;
+      })
+    );
+    return of(result);
+  }
 
   searchMines(board: Square[][], selectedSquare: Square): Observable<SearchMinesResult> {
     let searchMineResult = new SearchMinesResult(board, 0, 0);

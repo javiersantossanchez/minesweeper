@@ -20,4 +20,6 @@ export abstract class BoardGameService {
   abstract getNumberOfMines(): number;
 
   abstract searchMines(boardGame: Square[][], selectedSquare: Square): Observable<SearchMinesResult>;
+
+  abstract explodeAllMines(board: Square[][]): Observable<Square[][]>;
 }
