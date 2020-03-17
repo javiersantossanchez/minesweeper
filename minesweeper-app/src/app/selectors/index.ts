@@ -28,5 +28,5 @@ export const squareStatusSelector = createSelector(
 
 export const gameStatus = createSelector(
   (state: any) => state.rootState,
-  (state: GameState, props): boolean => state.gameStatus === props.status
+  (state: GameState, props): boolean => { console.log(state); return state.gameStatus === props.status; }
 );

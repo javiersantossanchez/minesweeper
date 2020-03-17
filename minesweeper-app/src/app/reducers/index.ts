@@ -1,8 +1,7 @@
-import { gameStatus } from './../selectors/index';
-import { timeOutAction, searchMinesSuccessfulAction, explodeAllMinesAction } from './../actions/index';
+import {  searchMinesSuccessfulAction, explodeAllMinesAction } from './../actions/index';
 import { createReducer, on, Action } from '@ngrx/store';
 import { GameState, GAME_STATUS } from '../dtos/game-state';
-import { searchMinesAction, loadBoardGameAction, setMarkOnMineAction } from '../actions';
+import { loadBoardGameAction, setMarkOnMineAction } from '../actions';
 
 const initialState: GameState = {
   gameBoard: [],
