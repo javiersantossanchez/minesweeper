@@ -5,9 +5,8 @@ import { provideMockStore, MockStore } from '@ngrx/store/testing';
 
 import { BoardGameComponent } from './board-game.component';
 import { GameState, GAME_STATUS } from 'src/app/dtos/game-state';
-import { NgLetModule } from '@ngrx-utils/store';
-import { getGameBoardLength, gameStatus, squareStatusSelector } from 'src/app/selectors';
-import { SquareState } from 'src/app/dtos/square-state-dto';
+import { getGameBoardLength, gameStatus } from 'src/app/selectors';
+import { MockComponent } from 'ng-mocks';
 
 describe('BoardGameComponent', () => {
   let component: BoardGameComponent;
@@ -16,16 +15,9 @@ describe('BoardGameComponent', () => {
   let mockUsernameSelector: MemoizedSelector<GameState, number>;
   let asd: MemoizedSelectorWithProps<GameState, GAME_STATUS, boolean>;
 
-  let qweqew: MemoizedSelectorWithProps<GameState, {
-    row: number;
-    column: number;
-  }, SquareState>;
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BoardGameComponent,
-                      SquareComponent],
-      imports : [ NgLetModule ],
+      declarations: [ BoardGameComponent, MockComponent(SquareComponent)],
       providers: [provideMockStore(), ],
     })
     .compileComponents();
@@ -44,19 +36,6 @@ describe('BoardGameComponent', () => {
     asd = store.overrideSelector(
       gameStatus,
       true
-    );
-
-
-    const value: SquareState = {
-      isClosed: true,
-      isOpen: false,
-      isMine: true,
-      numberOfMinesAround: 0,
-      isMarked: true,
-      isBroken: false};
-      qweqew = store.overrideSelector(
-      squareStatusSelector,
-      value
     );
 
     fixture.detectChanges();
