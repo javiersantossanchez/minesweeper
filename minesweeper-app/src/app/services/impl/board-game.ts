@@ -85,7 +85,7 @@ export class BoardGame implements BoardGameService {
     return searchMineDto;
   }
 
-  generateBoard(): Observable<Array<Array<Square>>> {
+  generateBoard(): Square[][] {
     const board: Array<Array<Square>> = new Array<Array<Square>>();
     let sequence = 1;
 
@@ -97,9 +97,7 @@ export class BoardGame implements BoardGameService {
         board[row].push(squareTmp);
       }
     }
-    const boardToReturn: Array<Array<Square>> = this.calculateNumOfMinesAround(this.installMines(board));
-
-    return of(boardToReturn);
+    return this.calculateNumOfMinesAround(this.installMines(board));
   }
 
   private installMines(board: Array<Array<Square>>): Array<Array<Square>> {

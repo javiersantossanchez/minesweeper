@@ -13,7 +13,7 @@ export abstract class BoardGameService {
 
   constructor() { }
 
-  abstract generateBoard(): Observable<Array<Array<Square>>>;
+  abstract generateBoard(): Array<Array<Square>>;
 
   abstract getBoardSize(): number;
 

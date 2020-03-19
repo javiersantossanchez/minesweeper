@@ -6,6 +6,7 @@ import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { BoardGameService } from './services/def/board-game.service';
 import { GameState } from './dtos/game-state';
 import { Store } from '@ngrx/store';
+import { Square } from './entities/square';
 
 
 @Injectable()
@@ -16,14 +17,15 @@ export class AppEffects {
    generateBoard = createEffect(
         () => this.actions.pipe(
               ofType(generateGameBoardAction),
-              mergeMap( () =>
-                this.boardGameService.generateBoard()
-                .pipe(map( resp => loadBoardGameAction({
-                                                  boardGame: resp,
+              map( () => {
+                const board: Array<Array<Square>>  = this.boardGameService.generateBoard();
+                return loadBoardGameAction({
+                                                  boardGame: board,
                                                   gameBoardLength: this.boardGameService.getBoardSize(),
                                                   availableMarks: this.boardGameService.getNumberOfMines(),
                                                   installedMines: this.boardGameService.getNumberOfMines(),
-                                                })))
+                                                });
+                                              }
               )
         )
     );
@@ -44,7 +46,7 @@ export class AppEffects {
             ofType(searchMinesAction),
             withLatestFrom(this.store.select(getBoardGame)),
             mergeMap(action => {
-                       if(action[1][action[0].rowIndex][action[0].columnIndex].isMine()){
+                       if (action[1][action[0].rowIndex][action[0].columnIndex].isMine()) {
                          return this.boardGameService.explodeAllMines(action[1])
                          .pipe(map( resp => explodeAllMinesAction({boardGame: resp})));
                        } else {

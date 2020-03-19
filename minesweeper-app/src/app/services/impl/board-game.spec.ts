@@ -1,28 +1,41 @@
+import { getGameBoardLength } from './../../selectors/index';
 import { BoardGame } from './board-game';
 import { Square } from 'src/app/entities/square';
+import { BoardGameService } from '../def/board-game.service';
 
 describe('BoardGame', () => {
+
   it('should create an instance', () => {
     expect(new BoardGame()).toBeTruthy();
   });
 
- /* it('generate board on right way', () => {
-    const boardGame: BoardGame = new BoardGame();
-    const board: Array<Array<Square>> = boardGame.generateBoard();
-    let numOfMines = 0;
+  it('Generates board with a valid number of mines', () => {
+     const boardGameService: BoardGameService = new BoardGame();
+     const board: Square[][] = boardGameService.generateBoard();
+     const numOfMinesExpected = boardGameService.getNumberOfMines();
 
-    for (let row of board ) {
-      for (let column of row) {
-        if (column.thereIsAMine()) {
-          numOfMines++;
-        }
-      }
-    }
+     const totalMines =
+          board.map(
+                      row => row.map( square => square.isMine() ? 1 : 0).reduce((sum, current) => sum + current , 0)
+                   ).reduce((sum, current) => sum + current , 0);
+     expect(totalMines).toEqual(numOfMinesExpected);
+   });
 
-    expect(numOfMines).toEqual(board.length);
+
+  it('Generates board with a valid number of ', () => {
+    const boardGameService: BoardGameService = new BoardGame();
+    const board: Square[][] = boardGameService.generateBoard();
+    const boardLengthExpected = boardGameService.getBoardSize();
+
+    let allLengthIsOk =
+              board.map( row => row.length === boardLengthExpected).reduce((finalResult, current) => finalResult && current, true);
+    allLengthIsOk = allLengthIsOk && (boardLengthExpected === board.length);
+
+    expect(allLengthIsOk).toBeTruthy();
   });
 
-  it('looking for empty squares', () => {
+
+ /** it('looking for empty squares', () => {
     const boardGame: BoardGame = new BoardGame();
     const boardOfMines: Array<Array<boolean>> = [[false, false, false, false, false, false],
                                                  [true,  false, false, false, false, false],
