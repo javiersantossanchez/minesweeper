@@ -1,3 +1,4 @@
+import { BoardGenerator } from './../../generators/board-generator.generator';
 
 import { Observable, of } from 'rxjs';
 import { SearchMinesResult } from 'src/app/dtos/search-mines-result-dto';
@@ -6,6 +7,12 @@ import { BoardGameService } from 'src/app/services/def/board-game.service';
 
 
 export class BoardGame implements BoardGameService {
+
+  private boardGenerator: BoardGenerator;
+
+  constructor() {
+    this.boardGenerator = new BoardGenerator();
+  }
 
   explodeAllMines(board: Square[][]): Observable<Square[][]> {
     const result: Square[][] = board.map(row =>
@@ -97,62 +104,8 @@ export class BoardGame implements BoardGameService {
         board[row].push(squareTmp);
       }
     }
-    return this.calculateNumOfMinesAround(this.installMines(board));
+    return this.boardGenerator.calculateNumOfMinesAround(this.boardGenerator.installMines(board, this.getNumberOfMines()));
   }
-
-  private installMines(board: Array<Array<Square>>): Array<Array<Square>> {
-    for (let i = 1; i <= this.getNumberOfMines(); ) {
-      const row = Math.floor(Math.random() * Math.floor(this.getBoardSize()));
-      const column = Math.floor(Math.random() * Math.floor(this.getBoardSize()));
-      if (!board[row][column].isMine()) {
-        board[row][column].installMine();
-        i++;
-      }
-    }
-    return board;
-  }
-
-  private calculateNumOfMinesAround(board: Array<Array<Square>>): Array<Array<Square>> {
-    for (let row = 0; row < this.getBoardSize(); row++) {
-      for (let column = 0; column < this.getBoardSize(); column++) {
-          let numOfMines = 0;
-          if ( (row >= 1) && board[row - 1][column].isMine()) {
-              numOfMines++;
-          }
-
-          if ( (row < this.getBoardSize() - 1) && board[row + 1][column].isMine()) {
-              numOfMines++;
-          }
-
-          if ( (column >= 1) && board[row][column - 1].isMine()) {
-            numOfMines++;
-          }
-
-          if ( (column < this.getBoardSize() - 1) && board[row][column + 1].isMine()) {
-            numOfMines++;
-          }
-
-          if ( (row >= 1) && (column >= 1) && board[row - 1][column - 1].isMine()) {
-            numOfMines++;
-          }
-
-          if ( (row < this.getBoardSize() - 1) && (column < this.getBoardSize() - 1) && board[row + 1][column + 1].isMine()) {
-            numOfMines++;
-          }
-
-          if ( (row >= 1) && (column < this.getBoardSize() - 1) && board[row - 1][column + 1].isMine()) {
-            numOfMines++;
-          }
-
-          if ( (row < this.getBoardSize() - 1) && (column >= 1) && board[row + 1][column - 1].isMine()) {
-            numOfMines++;
-          }
-          board[row][column].setNumberOfMinesAround(numOfMines);
-      }
-    }
-    return board;
-  }
-
 
   getBoardSize(): number {
     return 6;
