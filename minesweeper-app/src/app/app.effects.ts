@@ -7,12 +7,13 @@ import { BoardGameService } from './services/def/board-game.service';
 import { GameState } from './dtos/game-state';
 import { Store } from '@ngrx/store';
 import { Square } from './entities/square';
+import { ConfigurationService } from './services/impl/configuration.service';
 
 
 @Injectable()
 export class AppEffects {
 
-  constructor(private actions: Actions, private store: Store<GameState>, private boardGameService: BoardGameService) {}
+  constructor(private actions: Actions, private store: Store<GameState>, private boardGameService: BoardGameService, private configurationService: ConfigurationService) {}
 
    generateBoard = createEffect(
         () => this.actions.pipe(
@@ -21,9 +22,9 @@ export class AppEffects {
                 const board: Array<Array<Square>>  = this.boardGameService.generateBoard();
                 return loadBoardGameAction({
                                                   boardGame: board,
-                                                  gameBoardLength: this.boardGameService.getBoardSize(),
-                                                  availableMarks: this.boardGameService.getNumberOfMines(),
-                                                  installedMines: this.boardGameService.getNumberOfMines(),
+                                                  gameBoardLength: this.configurationService.lengthBoard(),
+                                                  availableMarks: this.configurationService.numberOfMines(),
+                                                  installedMines: this.configurationService.numberOfMines(),
                                                 });
                                               }
               )

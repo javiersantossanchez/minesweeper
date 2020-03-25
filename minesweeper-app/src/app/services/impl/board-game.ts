@@ -4,13 +4,14 @@ import { Observable, of } from 'rxjs';
 import { SearchMinesResult } from 'src/app/dtos/search-mines-result-dto';
 import { Square } from 'src/app/entities/square';
 import { BoardGameService } from 'src/app/services/def/board-game.service';
+import { ConfigurationService } from './configuration.service';
 
 
 export class BoardGame implements BoardGameService {
 
   private boardGenerator: BoardGenerator;
 
-  constructor() {
+  constructor(private configurationService: ConfigurationService) {
     this.boardGenerator = new BoardGenerator();
   }
 
@@ -93,28 +94,11 @@ export class BoardGame implements BoardGameService {
   }
 
   generateBoard(): Square[][] {
-    const board: Array<Array<Square>> = new Array<Array<Square>>();
-    let sequence = 1;
-
-    for (let row = 0; row < this.getBoardSize(); row++) {
-      board[row] = new Array<Square>();
-      for (let column = 0; column < this.getBoardSize(); column++) {
-        sequence++;
-        const squareTmp: Square = new Square(sequence, row, column);
-        board[row].push(squareTmp);
-      }
+    let board: Array<Array<Square>> = this.boardGenerator.generateBoard( this.configurationService.lengthBoard());
+    if(board != null){
+      board = this.boardGenerator.calculateNumOfMinesAround(this.boardGenerator.installMines(board, this.configurationService.numberOfMines()));
     }
-    return this.boardGenerator.calculateNumOfMinesAround(this.boardGenerator.installMines(board, this.getNumberOfMines()));
+    return board;
   }
-
-  getBoardSize(): number {
-    return 6;
-  }
-
-  getNumberOfMines(): number {
-    return 5;
-  }
-
-
 
 }

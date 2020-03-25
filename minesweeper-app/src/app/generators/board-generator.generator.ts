@@ -2,6 +2,25 @@ import { Square } from '../entities/square';
 
 export class BoardGenerator {
 
+  generateBoard(boardGameLength: number): Square[][] {
+    if (boardGameLength <= 0) {
+      return null;
+    }
+
+    const board: Array<Array<Square>> = new Array<Array<Square>>();
+    let sequence = 1;
+
+    for (let row = 0; row < boardGameLength; row++) {
+      board[row] = new Array<Square>();
+      for (let column = 0; column < boardGameLength; column++) {
+        sequence++;
+        const squareTmp: Square = new Square(sequence, row, column);
+        board[row].push(squareTmp);
+      }
+    }
+    return board;
+  }
+
   installMines(board: Array<Array<Square>>, numberOfMineToInstall: number): Array<Array<Square>> {
     if ((numberOfMineToInstall > board.length * board.length) || (numberOfMineToInstall < 0 )) {
       return null;

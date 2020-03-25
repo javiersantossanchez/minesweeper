@@ -4,6 +4,7 @@ import { BoardGame } from '../impl/board-game';
 import { Square } from 'src/app/entities/square';
 import { Observable } from 'rxjs';
 import { SearchMinesResult } from 'src/app/dtos/search-mines-result-dto';
+import { ConfigurationService } from '../impl/configuration.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,13 +12,9 @@ import { SearchMinesResult } from 'src/app/dtos/search-mines-result-dto';
 })
 export abstract class BoardGameService {
 
-  constructor() { }
+  constructor(configurationService: ConfigurationService) { }
 
   abstract generateBoard(): Array<Array<Square>>;
-
-  abstract getBoardSize(): number;
-
-  abstract getNumberOfMines(): number;
 
   abstract searchMines(boardGame: Square[][], selectedSquare: Square): Observable<SearchMinesResult>;
 

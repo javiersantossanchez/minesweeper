@@ -1,3 +1,4 @@
+import { ConfigurationService } from './services/impl/configuration.service';
 import { BrowserModule} from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 

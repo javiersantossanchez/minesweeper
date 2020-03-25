@@ -255,4 +255,46 @@ describe('BoardGenerator', () => {
     expect(boardResult[initialSquare.length - 1][initialSquare.length - 1].getNumberOfMineAround()).toEqual(numberOfMinesAroundExpected);
   });
 
+  it('create a game board of 1x1 with right default status', () => {
+
+    const generator = new BoardGenerator();
+    const length = 1;
+    const boardResult: Array<Array<Square>> = generator.generateBoard(length);
+    let isStatusRight = boardResult[0][0].isClosed();
+    isStatusRight = isStatusRight && !boardResult[0][0].isMine();
+    isStatusRight = isStatusRight && !boardResult[0][0].isMarked();
+    isStatusRight = isStatusRight && (boardResult[0][0].getNumberOfMineAround() === 0);
+
+    expect(isStatusRight).toBeTruthy();
+  });
+
+  it('create a game board of 4x4 correctly', () => {
+
+    const generator = new BoardGenerator();
+    const length = 4;
+    const numberSquareExpected = length * length;
+
+    const boardResult: Array<Array<Square>> = generator.generateBoard(length);
+    const numberSquareGenerated = boardResult.map( row => row.length).reduce((finalResult, current) => finalResult + current, 0);
+    expect(numberSquareGenerated).toEqual(numberSquareExpected);
+  });
+
+  it('create a game board with negative value of length ', () => {
+
+    const generator = new BoardGenerator();
+    const length = -1;
+
+    const boardResult: Array<Array<Square>> = generator.generateBoard(length);
+    expect(boardResult).toBeNull();
+  });
+
+  it('create a game board with zero value of length ', () => {
+
+    const generator = new BoardGenerator();
+    const length = 0;
+
+    const boardResult: Array<Array<Square>> = generator.generateBoard(length);
+    expect(boardResult).toBeNull();
+  });
+
 });
