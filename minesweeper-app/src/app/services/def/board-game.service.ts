@@ -16,7 +16,7 @@ export abstract class BoardGameService {
 
   abstract generateBoard(): Array<Array<Square>>;
 
-  abstract searchMines(boardGame: Square[][], selectedSquare: Square): Observable<SearchMinesResult>;
+  abstract searchMines(boardGame: Square[][], selectedSquare: Square): SearchMinesResult;
 
-  abstract explodeAllMines(board: Square[][]): Observable<Square[][]>;
+  abstract explodeAllMines(board: Square[][]): Square[][];
 }

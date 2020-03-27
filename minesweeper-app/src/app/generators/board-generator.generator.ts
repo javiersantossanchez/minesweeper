@@ -37,6 +37,9 @@ export class BoardGenerator {
   }
 
   calculateNumOfMinesAround(board: Array<Array<Square>>): Array<Array<Square>> {
+    if(board === null) {
+      return null;
+    }
     for (let row = 0; row < board.length; row++) {
       for (let column = 0; column < board.length; column++) {
           let numOfMines = 0;

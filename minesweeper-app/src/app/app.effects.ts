@@ -8,6 +8,7 @@ import { GameState } from './dtos/game-state';
 import { Store } from '@ngrx/store';
 import { Square } from './entities/square';
 import { ConfigurationService } from './services/impl/configuration.service';
+import { SearchMinesResult } from './dtos/search-mines-result-dto';
 
 
 @Injectable()
@@ -35,9 +36,10 @@ export class AppEffects {
       () => this.actions.pipe(
             ofType(timeOutAction),
             withLatestFrom(this.store.select(getBoardGame)),
-            mergeMap( action =>
-              this.boardGameService.explodeAllMines(action[1])
-              .pipe(map( resp => explodeAllMinesAction({boardGame: resp})))
+            map( action => {
+                            const board: Array<Array<Square>>  = this.boardGameService.explodeAllMines(action[1]);
+                            return explodeAllMinesAction({boardGame: board});
+                          }
             )
       )
   );
@@ -46,19 +48,20 @@ export class AppEffects {
       () => this.actions.pipe(
             ofType(searchMinesAction),
             withLatestFrom(this.store.select(getBoardGame)),
-            mergeMap(action => {
-                       if (action[1][action[0].rowIndex][action[0].columnIndex].isMine()) {
-                         return this.boardGameService.explodeAllMines(action[1])
-                         .pipe(map( resp => explodeAllMinesAction({boardGame: resp})));
-                       } else {
-                        return this.boardGameService.searchMines(action[1], action[1][action[0].rowIndex][action[0].columnIndex])
-                                          .pipe(map( resp =>  searchMinesSuccessfulAction({
-                                                boardGame: resp.getBoardGame(),
-                                                numberOfMarkRemoved: resp.getNumberOfMarkRemoved(),
-                                                numberOfNewSquareOpen: resp.getNumberOfSquareOpened(),
-                                              })));
-                      }
-                                            }
+            map(action => {
+                              if (action[1][action[0].rowIndex][action[0].columnIndex].isMine()) {
+                              const board: Array<Array<Square>>  = this.boardGameService.explodeAllMines(action[1]);
+                              return explodeAllMinesAction({boardGame: board});
+                            } else {
+                              const result: SearchMinesResult =
+                                        this.boardGameService.searchMines(action[1], action[1][action[0].rowIndex][action[0].columnIndex]);
+                              return searchMinesSuccessfulAction({
+                                boardGame: result.getBoardGame(),
+                                numberOfMarkRemoved: result.getNumberOfMarkRemoved(),
+                                numberOfNewSquareOpen: result.getNumberOfSquareOpened(),
+                              });
+                            }
+                          }
             )
       )
   );

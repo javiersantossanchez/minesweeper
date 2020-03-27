@@ -15,7 +15,11 @@ export class BoardGame implements BoardGameService {
     this.boardGenerator = new BoardGenerator();
   }
 
-  explodeAllMines(board: Square[][]): Observable<Square[][]> {
+  explodeAllMines(board: Square[][]): Square[][] {
+    if (board === null) {
+      return null;
+    }
+
     const result: Square[][] = board.map(row =>
       row.map(square => {
         if (square.isMine() && !square.isMarked()) {
@@ -24,14 +28,14 @@ export class BoardGame implements BoardGameService {
         return square;
       })
     );
-    return of(result);
+    return result;
   }
 
-  searchMines(board: Square[][], selectedSquare: Square): Observable<SearchMinesResult> {
+  searchMines(board: Square[][], selectedSquare: Square): SearchMinesResult {
     let searchMineResult = new SearchMinesResult(board, 0, 0);
     searchMineResult = this.iterativeSearch(searchMineResult, selectedSquare);
     console.log(searchMineResult);
-    return of(searchMineResult);
+    return searchMineResult;
   }
 
   private iterativeSearch(searchMineDto: SearchMinesResult, selectedSquare: Square): SearchMinesResult {

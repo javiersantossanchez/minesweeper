@@ -255,6 +255,14 @@ describe('BoardGenerator', () => {
     expect(boardResult[initialSquare.length - 1][initialSquare.length - 1].getNumberOfMineAround()).toEqual(numberOfMinesAroundExpected);
   });
 
+  it('calculate number of mines around with a null board', () => {
+    const generator = new BoardGenerator();
+
+    const boardRppesult: Array<Array<Square>> = generator.calculateNumOfMinesAround(null);
+    expect(boardRppesult).toBeNull();
+  });
+
+
   it('create a game board of 1x1 with right default status', () => {
 
     const generator = new BoardGenerator();
