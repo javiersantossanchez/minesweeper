@@ -1,6 +1,5 @@
 import { BoardGenerator } from './../../generators/board-generator.generator';
 
-import { Observable, of } from 'rxjs';
 import { SearchMinesResult } from 'src/app/dtos/search-mines-result-dto';
 import { Square } from 'src/app/entities/square';
 import { BoardGameService } from 'src/app/services/def/board-game.service';
@@ -32,14 +31,16 @@ export class BoardGame implements BoardGameService {
   }
 
   searchMines(board: Square[][], selectedSquare: Square): SearchMinesResult {
+
     let searchMineResult = new SearchMinesResult(board, 0, 0);
     searchMineResult = this.iterativeSearch(searchMineResult, selectedSquare);
-    console.log(searchMineResult);
     return searchMineResult;
   }
 
   private iterativeSearch(searchMineDto: SearchMinesResult, selectedSquare: Square): SearchMinesResult {
-
+    if (searchMineDto.getBoardGame() === null || selectedSquare === null) {
+      return null;
+    }
     const row: number = selectedSquare.getRowIndex();
     const column: number = selectedSquare.getColumnIndex();
 
