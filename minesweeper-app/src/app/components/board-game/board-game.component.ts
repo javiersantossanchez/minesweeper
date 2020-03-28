@@ -13,7 +13,7 @@ import { getGameBoardLength, gameStatus } from 'src/app/selectors';
 })
 export class BoardGameComponent implements OnInit {
 
-  private boardGameLengthObservable: Observable<number> = this.store.select(getGameBoardLength);
+  private boardGameLengthObservable: Observable<number>;
 
   gameStatusPlayingObservable: Observable<boolean> ;
 
@@ -24,6 +24,7 @@ export class BoardGameComponent implements OnInit {
 
   ngOnInit() {
     this.gameStatusPlayingObservable = this.store.select(gameStatus, {status: GAME_STATUS.PLAYING});
+    this.boardGameLengthObservable = this.store.select(getGameBoardLength);
     this.boardGameLengthObservable.subscribe(boardGameLength => { this.arrayToDraw = Array(boardGameLength); });
     this.store.dispatch(generateGameBoardAction());
   }

@@ -1,7 +1,10 @@
+import { searchMinesAction } from 'src/app/actions';
 import { Injectable } from '@angular/core';
 import { BoardGame } from '../impl/board-game';
 import { Square } from 'src/app/entities/square';
 import { Observable } from 'rxjs';
+import { SearchMinesResult } from 'src/app/dtos/search-mines-result-dto';
+import { ConfigurationService } from '../impl/configuration.service';
 
 @Injectable({
   providedIn: 'root',
@@ -9,11 +12,11 @@ import { Observable } from 'rxjs';
 })
 export abstract class BoardGameService {
 
-  constructor() { }
+  constructor(configurationService: ConfigurationService) { }
 
-  abstract generateBoard(): Observable<Array<Array<Square>>>;
+  abstract generateBoard(): Array<Array<Square>>;
 
-  abstract getBoardSize(): number;
+  abstract searchMines(boardGame: Square[][], selectedSquare: Square): SearchMinesResult;
 
-  abstract getNumberOfMines(): number;
+  abstract explodeAllMines(board: Square[][]): Square[][];
 }

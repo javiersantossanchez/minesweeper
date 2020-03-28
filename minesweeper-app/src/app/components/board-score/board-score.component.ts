@@ -22,7 +22,7 @@ export class BoardScoreComponent implements OnInit {
   constructor(private store: Store<GameState>) {}
 
   ngOnInit() {
-    this.gameStatusLoseObservable = this.store.select(gameStatus, {
+     this.gameStatusLoseObservable = this.store.select(gameStatus, {
       status: GAME_STATUS.LOSE
     });
     this.gameStatusWinObservable = this.store.select(gameStatus, {

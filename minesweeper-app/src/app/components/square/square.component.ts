@@ -1,9 +1,8 @@
-import { Square } from './../../entities/square';
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { squareStatusSelector, } from 'src/app/selectors';
 import { Store } from '@ngrx/store';
-import { GameState, GAME_STATUS } from 'src/app/dtos/game-state';
+import { GameState } from 'src/app/dtos/game-state';
 import { searchMinesAction, setMarkOnMineAction } from 'src/app/actions';
 import { SquareState } from 'src/app/dtos/square-state-dto';
 
