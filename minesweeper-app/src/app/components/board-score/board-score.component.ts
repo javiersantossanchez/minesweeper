@@ -1,4 +1,4 @@
-import { timeOutAction } from "./../../actions/index";
+import { timeOutAction, generateGameBoardAction } from "./../../actions/index";
 import { gameStatus } from "./../../selectors/index";
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { GameState, GAME_STATUS } from "src/app/dtos/game-state";
@@ -36,5 +36,10 @@ export class BoardScoreComponent implements OnInit {
     if (e.action === 'done') {
       this.store.dispatch(timeOutAction());
     }
+  }
+
+  handlerRestartEvent() {
+    this.store.dispatch(generateGameBoardAction());
+    this.countdown.restart();
   }
 }
