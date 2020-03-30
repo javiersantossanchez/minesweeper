@@ -15,7 +15,7 @@ const gameReducer = createReducer(initialState,
   on(loadBoardGameAction, (state, action) => {
     return Object.assign(
         {},
-        state,
+        initialState,
         {
           gameBoard: action.boardGame,
           gameBoardLength: action.gameBoardLength,
