@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
 
-  boardLength: 10,
+  boardLength: 6,
 
   numberOfMines: 6,
 };

@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 import { GameState } from 'src/app/dtos/game-state';
 import { searchMinesAction, setMarkOnMineAction } from 'src/app/actions';
 import { SquareState } from 'src/app/dtos/square-state-dto';
+import { faCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: "app-square",
@@ -22,6 +23,8 @@ export class SquareComponent implements OnInit {
   isPlaying: boolean;
 
   squareStatusObservable: Observable<SquareState>;
+
+  faCircle = faCircle;
 
   constructor(private store: Store<GameState>) {}
 

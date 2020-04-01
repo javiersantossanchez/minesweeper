@@ -13,7 +13,11 @@
   </button>
   <div (contextmenu)="$event.preventDefault()" class="square-base square-open" *ngIf="squareStatus.isOpen">
     <ng-container *ngIf="squareStatus.numberOfMinesAround > 0">
-      {{squareStatus.numberOfMinesAround}}
+      <fa-layers [fixedWidth]="true" size="3x" style="height: 100%; width: 100%;">
+        <fa-icon [icon]="faCircle" [styles]="{'stroke': 'gray', 'color': 'blue'}"></fa-icon>
+        <fa-layers-text  content="{{squareStatus.numberOfMinesAround}}" style="color: white;"></fa-layers-text>
+      </fa-layers>
+
     </ng-container>
   </div>
   </ng-container>
@@ -30,9 +34,11 @@
                     'square-open':squareStatus.isOpen}"
         >
         <ng-container *ngIf="squareStatus.numberOfMinesAround > 0 && squareStatus.isOpen">
-          {{squareStatus.numberOfMinesAround}}
+          <fa-layers [fixedWidth]="true" size="3x" style="height: 100%; width: 100%;">
+            <fa-icon [icon]="faCircle"  [styles]="{'stroke': 'gray', 'color': 'blue'}"></fa-icon>
+            <fa-layers-text  content="{{squareStatus.numberOfMinesAround}}" style="color: white;" transform="shrink-3" [fixedWidth]="true"></fa-layers-text>
+          </fa-layers>
         </ng-container>
-
     </div>
 </ng-container>
 </ng-template>
