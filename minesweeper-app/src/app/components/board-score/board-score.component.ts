@@ -5,6 +5,7 @@ import { GameState, GAME_STATUS } from "src/app/dtos/game-state";
 import { Store } from "@ngrx/store";
 import { Observable } from "rxjs";
 import { CountdownEvent, CountdownComponent } from "ngx-countdown";
+import { faPlayCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-board-score',
@@ -18,6 +19,8 @@ export class BoardScoreComponent implements OnInit {
   gameStatusLoseObservable: Observable<boolean>;
 
   gameStatusWinObservable: Observable<boolean>;
+
+  faPlayCircle = faPlayCircle;
 
   constructor(private store: Store<GameState>) {}
 
