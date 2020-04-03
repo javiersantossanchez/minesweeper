@@ -6,7 +6,7 @@
   <ng-container *ngLet="(squareStatusObservable |async) as squareStatus">
     <button
     class="square-base square-clickable"
-    [ngClass]="{'square-closed': squareStatus.isClosed, 'square-mine': squareStatus.isMine, 'square-marked':squareStatus.isMarked}"
+    [ngClass]="{'square-closed': squareStatus.isClosed, 'square-marked':squareStatus.isMarked}"
     (click)="open()"
     (contextmenu)="mark($event)"
     *ngIf="squareStatus.isClosed">
