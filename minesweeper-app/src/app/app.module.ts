@@ -15,6 +15,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { AppEffects } from './app.effects';
 import { NgLetModule } from '@ngrx-utils/store';
 import { CountdownModule } from 'ngx-countdown';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 
 @NgModule({
@@ -32,6 +33,7 @@ import { CountdownModule } from 'ngx-countdown';
     EffectsModule.forRoot([AppEffects]),
     NgLetModule,
     CountdownModule,
+    FontAwesomeModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -4,5 +4,5 @@ export const environment = {
 
   boardLength: 10,
 
-  numberOfMines: 7,
+  numberOfMines: 15,
 };

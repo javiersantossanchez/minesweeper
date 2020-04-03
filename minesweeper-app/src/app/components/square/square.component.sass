@@ -1,30 +1,32 @@
 $cursor: pointer
+$square-size: 60px
 
 .square-base
-  height: 30px
-  width: 30px
+  height: $square-size
+  width: $square-size
   border-width: 2px
   border-style: outset
   border-color: buttonface
   box-sizing: border-box
   margin: 0em
+  border-radius: 20% 20%
 
 .square-clickable
   cursor: $cursor
 
 .square-open
-  background-color: aquamarine
-  color: black
+  background:  linear-gradient(#EB442A, #EBC1BB)
 
 .square-closed
-  background-color: blueviolet
+  background-color: #71EB2A
 
 
 .square-broken
-  background-color: red
-
-.square-mine
-  background: green
+  background: url("/assets/icons/mine.ico") no-repeat center , linear-gradient(#EB442A, #EBC1BB)
+  background-size: $square-size
 
 .square-marked
-  background: pink
+  background: url("/assets/icons/flag.ico") no-repeat center , linear-gradient(orange, yellow)
+  background-size: $square-size
+
+
