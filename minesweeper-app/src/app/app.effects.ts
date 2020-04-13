@@ -48,13 +48,14 @@ export class AppEffects {
       () => this.actions.pipe(
             ofType(searchMinesAction),
             withLatestFrom(this.store.select(getBoardGame)),
-            map(action => {
-                              if (action[1][action[0].rowIndex][action[0].columnIndex].isMine()) {
-                              const board: Array<Array<Square>>  = this.boardGameService.explodeAllMines(action[1]);
+            map(([actionParam, storageResult]) => {
+                              console.log(actionParam);
+                              if (storageResult[actionParam.rowIndex][actionParam.columnIndex].isMine()) {
+                              const board: Array<Array<Square>>  = this.boardGameService.explodeAllMines(storageResult);
                               return explodeAllMinesAction({boardGame: board});
                             } else {
                               const result: SearchMinesResult =
-                                        this.boardGameService.searchMines(action[1], action[1][action[0].rowIndex][action[0].columnIndex]);
+                                        this.boardGameService.searchMines(storageResult, storageResult[actionParam.rowIndex][actionParam.columnIndex]);
                               return searchMinesSuccessfulAction({
                                 boardGame: result.getBoardGame(),
                                 numberOfMarkRemoved: result.getNumberOfMarkRemoved(),
