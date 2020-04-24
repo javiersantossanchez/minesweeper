@@ -1,22 +1,24 @@
 import { SquareComponent } from './../square/square.component';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Store } from '@ngrx/store';
+import { Store, MemoizedSelector, MemoizedSelectorWithProps } from '@ngrx/store';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
 
 import { BoardGameComponent } from './board-game.component';
-import { BoardDto } from 'src/app/dtos/board-dto';
+import { GameState, GAME_STATUS } from 'src/app/dtos/game-state';
+import { getGameBoardLength, gameStatus } from 'src/app/selectors';
+import { MockComponent } from 'ng-mocks';
 
 describe('BoardGameComponent', () => {
   let component: BoardGameComponent;
   let fixture: ComponentFixture<BoardGameComponent>;
-  let store: MockStore<BoardDto>;
-  const initialState: BoardDto = { gameBoard: [[],[],[]],gameBoardLength: 0};
+  let store: MockStore<GameState>;
+  let mockUsernameSelector: MemoizedSelector<GameState, number>;
+  let asd: MemoizedSelectorWithProps<GameState, GAME_STATUS, boolean>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BoardGameComponent,
-                      SquareComponent],
-      providers: [provideMockStore({ initialState }), ],
+      declarations: [ BoardGameComponent, MockComponent(SquareComponent)],
+      providers: [provideMockStore(), ],
     })
     .compileComponents();
 
@@ -24,8 +26,18 @@ describe('BoardGameComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(BoardGameComponent);
-    store = TestBed.get(Store);
     component = fixture.componentInstance;
+    store = TestBed.get(Store);
+    mockUsernameSelector = store.overrideSelector(
+      getGameBoardLength,
+      6
+    );
+
+    asd = store.overrideSelector(
+      gameStatus,
+      true
+    );
+
     fixture.detectChanges();
   });
 

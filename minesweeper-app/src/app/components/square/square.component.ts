@@ -1,58 +1,50 @@
-import { Square } from './../../entities/square';
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Observable } from 'rxjs';
-import { isClosed, isOpen, isAMine, numberOfMinesAround, isMarked } from 'src/app/selectors';
+import { squareStatusSelector, } from 'src/app/selectors';
 import { Store } from '@ngrx/store';
-import { BoardDto } from 'src/app/dtos/board-dto';
-import { searchByMines, setMark } from 'src/app/actions';
+import { GameState } from 'src/app/dtos/game-state';
+import { searchMinesAction, setMarkOnMineAction } from 'src/app/actions';
+import { SquareState } from 'src/app/dtos/square-state-dto';
+import { faCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-square',
-  templateUrl: './square.component.html',
-  styleUrls: ['./square.component.sass']
+  selector: "app-square",
+  templateUrl: "./square.component.html",
+  styleUrls: ["./square.component.sass"]
 })
 export class SquareComponent implements OnInit {
-
-
   @Input()
   rowIndex: number;
 
   @Input()
   columnIndex: number;
 
-  @Output()
-  selectEvent: EventEmitter<Square> = new EventEmitter<Square>();
+  @Input()
+  isPlaying: boolean;
 
-   isClosedObservable: Observable<boolean> ;
+  squareStatusObservable: Observable<SquareState>;
 
-   isOpenObservable: Observable<boolean> ;
+  faCircle = faCircle;
 
-   isAMineObservable: Observable<boolean> ;
-
-   numberOfMinesAroundObservable: Observable<number> ;
-
-   isMarkedObservable: Observable<boolean> ;
-
-
-  constructor(private store: Store<BoardDto>) {
-  }
+  constructor(private store: Store<GameState>) {}
 
   ngOnInit() {
-    this.isClosedObservable = this.store.select(isClosed, {row: this.rowIndex, column: this.columnIndex});
-    this.isOpenObservable = this.store.select(isOpen, {row: this.rowIndex, column: this.columnIndex});
-    this.isAMineObservable = this.store.select(isAMine, {row: this.rowIndex, column: this.columnIndex});
-    this.numberOfMinesAroundObservable = this.store.select(numberOfMinesAround, {row: this.rowIndex, column: this.columnIndex});
-    this.isMarkedObservable = this.store.select(isMarked, {row: this.rowIndex, column: this.columnIndex});
-
+    this.squareStatusObservable = this.store.select(squareStatusSelector, {
+      row: this.rowIndex,
+      column: this.columnIndex
+    });
   }
-
 
   open(): void {
-    this.store.dispatch(searchByMines({ rowIndex: this.rowIndex, columnIndex: this.columnIndex}));
+    this.store.dispatch(
+      searchMinesAction({ rowIndex: this.rowIndex, columnIndex: this.columnIndex })
+    );
   }
 
-  mark(): boolean {
-    this.store.dispatch(setMark({ rowIndex: this.rowIndex, columnIndex: this.columnIndex}));
-    return false;
+  mark($event: MouseEvent): void {
+    $event.preventDefault();
+    this.store.dispatch(
+      setMarkOnMineAction({ rowIndex: this.rowIndex, columnIndex: this.columnIndex })
+    );
   }
 }

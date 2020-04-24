@@ -1,69 +1,63 @@
+import {  searchMinesSuccessfulAction, explodeAllMinesAction } from './../actions/index';
 import { createReducer, on, Action } from '@ngrx/store';
-import { BoardDto } from '../dtos/board-dto';
-import { searchByMines, loadBoardGame, setMark} from '../actions';
-import { Square } from '../entities/square';
+import { GameState, GAME_STATUS } from '../dtos/game-state';
+import { loadBoardGameAction, setMarkOnMineAction } from '../actions';
 
-
-const initialState: BoardDto = {
+const initialState: GameState = {
   gameBoard: [],
   gameBoardLength: 0,
+  availableMarks: 0,
+  installedMines: 0,
+  gameStatus: GAME_STATUS.PLAYING,
+  numberOfOpenMines: 0
 };
-const testReducerInner = createReducer(initialState,
-  on(loadBoardGame, (state, action) => { return { gameBoard : action.boardGame, gameBoardLength: action.gameBoardLength };}),
-  on(searchByMines, (state, action) => {return { gameBoard : revealsNumberOfNeighborWithMine(state.gameBoard, state.gameBoard[action.rowIndex][action.columnIndex]),gameBoardLength: state.gameBoardLength };}),
-  on(setMark, (state, action) => {  state.gameBoard[action.rowIndex][action.columnIndex].setMark();
-                                    return {
-                                              gameBoard : state.gameBoard,
-                                              gameBoardLength: state.gameBoardLength
-                                           };
-                                 }
-  ),
-  );
+const gameReducer = createReducer(initialState,
+  on(loadBoardGameAction, (state, action) => {
+    return Object.assign(
+        {},
+        initialState,
+        {
+          gameBoard: action.boardGame,
+          gameBoardLength: action.gameBoardLength,
+          availableMarks: action.availableMarks,
+          installedMines: action.installedMines,
+        }
+    );
+  }),
+  on(explodeAllMinesAction, (state, action) => {
+    return Object.assign({}, state, { gameBoard: action.boardGame, gameStatus: GAME_STATUS.LOSE});
+}),
+  on(searchMinesSuccessfulAction, (state, action) => {
+      const newNumberOfOpenSquare = state.numberOfOpenMines + action.numberOfNewSquareOpen;
+      let newGameStatus = state.gameStatus;
+      if (newNumberOfOpenSquare + state.installedMines ===
+          state.gameBoardLength * state.gameBoardLength) {
+            newGameStatus = GAME_STATUS.WIN;
+      }
 
+      return Object.assign({}, state, { gameBoard: action.boardGame,
+                                          availableMarks: state.availableMarks + action.numberOfMarkRemoved,
+                                          numberOfOpenMines: newNumberOfOpenSquare,
+                                          gameStatus: newGameStatus,
+                                        });
+  }),
+  on(setMarkOnMineAction, (state, action) => {
+    let availableMarks = state.availableMarks;
+    if (state.gameBoard[action.rowIndex][action.columnIndex].isMarked()) {
+      state.gameBoard[action.rowIndex][action.columnIndex].setMark();
+      availableMarks++;
+    } else if (
+      !state.gameBoard[action.rowIndex][action.columnIndex].isMarked() &&
+      state.availableMarks > 0
+    ) {
+      state.gameBoard[action.rowIndex][action.columnIndex].setMark();
+      availableMarks--;
+    }
+    return Object.assign({}, state, { availableMarks });
+  }),
+);
 
-export function testReducer(state: BoardDto, action: Action) {
-  return testReducerInner(state, action);
+export function getGameReducer(state: GameState, action: Action) {
+  return gameReducer(state, action);
 }
 
-
-function revealsNumberOfNeighborWithMine(board: Array<Array<Square>>, selectedSquare: Square): Array<Array<Square>> {
-
-  const row: number = selectedSquare.getRowIndex();
-  const column: number = selectedSquare.getColumnIndex();
-
-  board[row][column].push();
-  if (board[row][column].getNumberOfMineAround() === 0) {
-     if (row >= 1 && board[row - 1][column].isClosed()) {
-      revealsNumberOfNeighborWithMine(board,  board[row - 1][column]);
-     }
-
-     if (row < board.length - 1 && board[row + 1][column].isClosed()) {
-      revealsNumberOfNeighborWithMine(board, board[row + 1][column]);
-     }
-
-     if (column >= 1 && board[row ][column - 1].isClosed()) {
-      revealsNumberOfNeighborWithMine(board, board[row][column - 1]);
-     }
-
-     if (column < board.length - 1 && board[row][column + 1].isClosed()) {
-      revealsNumberOfNeighborWithMine(board, board[row][column + 1]);
-     }
-
-     if ((row >= 1) && (column >= 1) && board[row - 1][column - 1].isClosed()) {
-      revealsNumberOfNeighborWithMine(board, board[row - 1][column - 1]);
-     }
-
-     if ((row < board.length - 1) && (column < board.length - 1) && board[row + 1][column + 1].isClosed()) {
-      revealsNumberOfNeighborWithMine(board, board[row + 1][column + 1]);
-     }
-
-     if ((row >= 1) && (column < board.length - 1) && board[row - 1][column + 1].isClosed()) {
-      revealsNumberOfNeighborWithMine(board, board[row - 1][column + 1]);
-    }
-
-     if ((row < board.length - 1) && (column >= 1) && board[row + 1][column - 1].isClosed()) {
-      revealsNumberOfNeighborWithMine(board, board[row + 1][column - 1]);
-    }
-  }
-  return  board;
-}

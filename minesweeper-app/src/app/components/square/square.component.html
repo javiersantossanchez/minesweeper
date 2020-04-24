@@ -1,12 +1,42 @@
-<button
-        class="square-base"
-        [ngClass]="{'square-closed': isClosedObservable | async, 'square-mine': isAMineObservable | async, 'square-marked':isMarkedObservable | async}"
-        (click)="open()"
-        (contextmenu)="mark()"
-        *ngIf="(isClosedObservable | async) || (isMarkedObservable | async)">
-</button>
-<div (contextmenu)="mark()" class="square-base square-open" *ngIf="isOpenObservable |async">
-  <ng-container *ngIf="(numberOfMinesAroundObservable | async) > 0">
-    {{numberOfMinesAroundObservable | async}}
+<ng-container *ngIf="isPlaying; then playing; else gameOver">
+
+</ng-container>
+
+<ng-template #playing >
+  <ng-container *ngLet="(squareStatusObservable |async) as squareStatus">
+    <button
+    class="square-base square-clickable"
+    [ngClass]="{'square-closed': squareStatus.isClosed, 'square-marked':squareStatus.isMarked}"
+    (click)="open()"
+    (contextmenu)="mark($event)"
+    *ngIf="squareStatus.isClosed">
+  </button>
+  <div (contextmenu)="$event.preventDefault()" class="square-base square-open" *ngIf="squareStatus.isOpen">
+    <ng-container *ngIf="squareStatus.numberOfMinesAround > 0">
+      <fa-layers [fixedWidth]="true" size="3x" style="height: 100%; width: 100%;">
+        <fa-layers-text  content="{{squareStatus.numberOfMinesAround}}" style="color: #395E24;"></fa-layers-text>
+      </fa-layers>
+
+    </ng-container>
+  </div>
   </ng-container>
-</div>
+</ng-template>
+
+
+<ng-template #gameOver>
+  <ng-container *ngLet="(squareStatusObservable |async) as squareStatus">
+    <div (contextmenu)="$event.preventDefault()"
+        class="square-base"
+        [ngClass]="{'square-closed': squareStatus.isClosed,
+                    'square-marked':squareStatus.isMarked,
+                    'square-broken':squareStatus.isBroken,
+                    'square-open':squareStatus.isOpen}"
+        >
+        <ng-container *ngIf="squareStatus.numberOfMinesAround > 0 && squareStatus.isOpen">
+          <fa-layers [fixedWidth]="true" size="3x" style="height: 100%; width: 100%;">
+            <fa-layers-text  content="{{squareStatus.numberOfMinesAround}}" style="color: #395E24;" transform="shrink-3" [fixedWidth]="true"></fa-layers-text>
+          </fa-layers>
+        </ng-container>
+    </div>
+</ng-container>
+</ng-template>

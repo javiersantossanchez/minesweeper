@@ -1,0 +1,5 @@
+<p *ngIf="gameStatusWinObservable |async" >You Win</p>
+<p *ngIf="gameStatusLoseObservable |async" >You Lose</p>
+<countdown #cd [config]="{leftTime: 30, notify: [2, 5]}" (event)="handleCountdownEvent($event)"></countdown>
+<br>
+<fa-icon [icon]="faPlayCircle" size="4x" [styles]="{'color': '#8AEB97'}" (click)="handlerRestartEvent()"></fa-icon>

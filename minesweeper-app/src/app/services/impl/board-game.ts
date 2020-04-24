@@ -1,126 +1,109 @@
+import { BoardGenerator } from './../../generators/board-generator.generator';
 
+import { SearchMinesResult } from 'src/app/dtos/search-mines-result-dto';
+import { Square } from 'src/app/entities/square';
 import { BoardGameService } from 'src/app/services/def/board-game.service';
-import { Square ,STATUS} from 'src/app/entities/square';
-import { Observable, of } from 'rxjs';
+import { ConfigurationService } from './configuration.service';
 
 
 export class BoardGame implements BoardGameService {
 
-  generateBoard(): Observable<Array<Array<Square>>> {
-    const board: Array<Array<Square>> = new Array<Array<Square>>();
-    let sequence = 1;
+  private boardGenerator: BoardGenerator;
 
-    for (let row = 0; row < this.getBoardSize(); row++) {
-      board[row] = new Array<Square>();
-      for (let column = 0; column < this.getBoardSize(); column++) {
-        sequence++;
-        const squareTmp: Square = new Square(sequence, row, column);
-        board[row].push(squareTmp);
-      }
-    }
-    const boardToReturn: Array<Array<Square>> = this.calculateNumOfMinesAround(this.installMines(board));
-
-    return of(boardToReturn);//.map( item => item.map( innerItem => innerItem.getSquareData())));
+  constructor(private configurationService: ConfigurationService) {
+    this.boardGenerator = new BoardGenerator();
   }
 
-  private installMines(board: Array<Array<Square>>): Array<Array<Square>> {
-    for (let i = 1; i <= this.getBoardSize(); ) {
-      const row = Math.floor(Math.random() * Math.floor(this.getBoardSize()));
-      const column = Math.floor(Math.random() * Math.floor(this.getBoardSize()));
-      if (!board[row][column].isMine()) {
-        board[row][column].installMine();
-        i++;
-      }
+  explodeAllMines(board: Square[][]): Square[][] {
+    if (board === null) {
+      return null;
     }
-    return board;
+
+    const result: Square[][] = board.map(row =>
+      row.map(square => {
+        if (square.isMine() && !square.isMarked()) {
+          square.explodeMine();
+        }
+        return square;
+      })
+    );
+    return result;
   }
 
-  private calculateNumOfMinesAround(board: Array<Array<Square>>): Array<Array<Square>> {
-    for (let row = 0; row < this.getBoardSize(); row++) {
-      for (let column = 0; column < this.getBoardSize(); column++) {
-          let numOfMines = 0;
-          if ( (row >= 1) && board[row - 1][column].isMine()) {
-              numOfMines++;
-          }
+  searchMines(board: Square[][], selectedSquare: Square): SearchMinesResult {
 
-          if ( (row < this.getBoardSize() - 1) && board[row + 1][column].isMine()) {
-              numOfMines++;
-          }
-
-          if ( (column >= 1) && board[row][column - 1].isMine()) {
-            numOfMines++;
-          }
-
-          if ( (column < this.getBoardSize() - 1) && board[row][column + 1].isMine()) {
-            numOfMines++;
-          }
-
-          if ( (row >= 1) && (column >= 1) && board[row - 1][column - 1].isMine()) {
-            numOfMines++;
-          }
-
-          if ( (row < this.getBoardSize() - 1) && (column < this.getBoardSize() - 1) && board[row + 1][column + 1].isMine()) {
-            numOfMines++;
-          }
-
-          if ( (row >= 1) && (column < this.getBoardSize() - 1) && board[row - 1][column + 1].isMine()) {
-            numOfMines++;
-          }
-
-          if ( (row < this.getBoardSize() - 1) && (column >= 1) && board[row + 1][column - 1].isMine()) {
-            numOfMines++;
-          }
-          board[row][column].setNumberOfMinesAround(numOfMines);
-      }
-    }
-    return board;
+    let searchMineResult = new SearchMinesResult(board, 0, 0);
+    searchMineResult = this.iterativeSearch(searchMineResult, selectedSquare);
+    return searchMineResult;
   }
 
-  revealsNumberOfNeighborWithMine(board: Array<Array<Square>>, selectedSquare: Square): Array<Array<Square>> {
+  private iterativeSearch(searchMineDto: SearchMinesResult, selectedSquare: Square): SearchMinesResult {
+    if (searchMineDto.getBoardGame() === null || selectedSquare === null) {
+      return null;
+    }
     const row: number = selectedSquare.getRowIndex();
     const column: number = selectedSquare.getColumnIndex();
 
-    board[row][column].push();
-    if (board[row][column].getNumberOfMineAround() === 0) {
-       if (row >= 1 && board[row - 1][column].isClosed()) {
-        this.revealsNumberOfNeighborWithMine(board,  board[row - 1][column]);
-       }
-
-       if (row < this.getBoardSize() - 1 && board[row + 1][column].isClosed()) {
-        this.revealsNumberOfNeighborWithMine(board, board[row + 1][column]);
-       }
-
-       if (column >= 1 && board[row ][column - 1].isClosed()) {
-        this.revealsNumberOfNeighborWithMine(board, board[row][column - 1]);
-       }
-
-       if (column < this.getBoardSize() - 1 && board[row][column + 1].isClosed()) {
-        this.revealsNumberOfNeighborWithMine(board, board[row][column + 1]);
-       }
-
-       if ((row >= 1) && (column >= 1) && board[row - 1][column - 1].isClosed()) {
-        this.revealsNumberOfNeighborWithMine(board, board[row - 1][column - 1]);
-       }
-
-       if ((row < this.getBoardSize() - 1) && (column < this.getBoardSize() - 1) && board[row + 1][column + 1].isClosed()) {
-        this.revealsNumberOfNeighborWithMine(board, board[row + 1][column + 1]);
-       }
-
-       if ((row >= 1) && (column < this.getBoardSize() - 1) && board[row - 1][column + 1].isClosed()) {
-        this.revealsNumberOfNeighborWithMine(board, board[row - 1][column + 1]);
+    if (searchMineDto.isMarked(row, column)) {
+      searchMineDto.setMark(row, column);
+      searchMineDto.increaseNumberOfMarkRemoved();
+    }
+    searchMineDto.increaseNumberOfSquareOpened();
+    searchMineDto.push(row, column);
+    if (searchMineDto.getNumberOfMineAround(row, column) === 0) {
+      if (row >= 1 && searchMineDto.isClosed(row - 1, column)) {
+        this.iterativeSearch(searchMineDto, searchMineDto.getSquare(row - 1, column));
       }
 
-       if ((row < this.getBoardSize() - 1) && (column >= 1) && board[row + 1][column - 1].isClosed()) {
-        this.revealsNumberOfNeighborWithMine(board, board[row + 1][column - 1]);
+      if (row < searchMineDto.getLength() - 1 && searchMineDto.isClosed(row + 1, column)) {
+        this.iterativeSearch(searchMineDto, searchMineDto.getSquare(row + 1, column));
       }
+
+      if (column >= 1 && searchMineDto.isClosed(row, column - 1)) {
+        this.iterativeSearch(searchMineDto, searchMineDto.getSquare(row, column - 1));
+      }
+
+      if (column < searchMineDto.getLength() - 1 && searchMineDto.isClosed(row, column + 1)) {
+        this.iterativeSearch(searchMineDto, searchMineDto.getSquare(row, column + 1));
+      }
+
+      if (row >= 1 && column >= 1 && searchMineDto.isClosed(row - 1, column - 1)) {
+        this.iterativeSearch(searchMineDto, searchMineDto.getSquare(row - 1, column - 1));
+      }
+
+      if (
+        row < searchMineDto.getLength() - 1 &&
+        column < searchMineDto.getLength() - 1 &&
+        searchMineDto.isClosed(row + 1, column + 1)
+      ) {
+        this.iterativeSearch(searchMineDto, searchMineDto.getSquare(row + 1, column + 1));
+      }
+
+      if (
+        row >= 1 &&
+        column < searchMineDto.getLength() - 1 &&
+        searchMineDto.isClosed(row - 1, column + 1)
+      ) {
+        this.iterativeSearch(searchMineDto, searchMineDto.getSquare(row - 1, column + 1));
+      }
+
+      if (
+        row < searchMineDto.getLength() - 1 &&
+        column >= 1 &&
+        searchMineDto.isClosed(row + 1, column - 1)
+      ) {
+        this.iterativeSearch(searchMineDto, searchMineDto.getSquare(row + 1, column - 1));
+      }
+    }
+    return searchMineDto;
+  }
+
+  generateBoard(): Square[][] {
+    let board: Array<Array<Square>> = this.boardGenerator.generateBoard( this.configurationService.lengthBoard());
+    if(board != null){
+      board = this.boardGenerator.calculateNumOfMinesAround(this.boardGenerator.installMines(board, this.configurationService.numberOfMines()));
     }
     return board;
   }
-
-  getBoardSize(): number {
-    return 6;
-  }
-
-
 
 }
