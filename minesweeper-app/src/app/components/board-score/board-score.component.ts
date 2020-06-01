@@ -1,11 +1,12 @@
-import { timeOutAction, generateGameBoardAction } from "./../../actions/index";
-import { gameStatus } from "./../../selectors/index";
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { GameState, GAME_STATUS } from "src/app/dtos/game-state";
-import { Store } from "@ngrx/store";
-import { Observable } from "rxjs";
-import { CountdownEvent, CountdownComponent } from "ngx-countdown";
+import { timeOutAction, generateGameBoardAction } from './../../actions/index';
+import { gameStatus, boardScoreStatus } from './../../selectors/index';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { GameState, GAME_STATUS } from 'src/app/dtos/game-state';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { CountdownEvent, CountdownComponent, CountdownConfig } from 'ngx-countdown';
 import { faPlayCircle } from '@fortawesome/free-solid-svg-icons';
+import { BoardScoreState } from 'src/app/dtos/board-score-state';
 
 @Component({
   selector: 'app-board-score',
@@ -20,19 +21,25 @@ export class BoardScoreComponent implements OnInit {
 
   gameStatusWinObservable: Observable<boolean>;
 
+  boardScoreStateObservable: Observable<BoardScoreState>;
+
   faPlayCircle = faPlayCircle;
+
+  prettyConfig: CountdownConfig = {
+    notify: [2, 5],
+    leftTime: 30,
+    format: 'HH:mm:ss',
+    prettyText: (text) => `<span class="test-class">${text}</span>`,
+  };
 
   constructor(private store: Store<GameState>) {}
 
   ngOnInit() {
-     this.gameStatusLoseObservable = this.store.select(gameStatus, {
-      status: GAME_STATUS.LOSE
-    });
-    this.gameStatusWinObservable = this.store.select(gameStatus, {
-      status: GAME_STATUS.WIN
-    });
 
-    this.store.select(gameStatus, {status: GAME_STATUS.PLAYING}).subscribe( isPlaying => { if (!isPlaying) { this.countdown.pause();} });
+     this.boardScoreStateObservable = this.store.select(boardScoreStatus);
+     this.store.select(gameStatus, {status: GAME_STATUS.PLAYING}).subscribe( isPlaying => { if (!isPlaying) { this.countdown.pause(); } });
+
+
   }
 
   handleCountdownEvent(e: CountdownEvent) {
