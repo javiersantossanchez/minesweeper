@@ -1,5 +1,17 @@
-<p *ngIf="gameStatusWinObservable |async" >You Win</p>
-<p *ngIf="gameStatusLoseObservable |async" >You Lose</p>
-<countdown #cd [config]="{leftTime: 30, notify: [2, 5]}" (event)="handleCountdownEvent($event)"></countdown>
-<br>
-<fa-icon [icon]="faPlayCircle" size="4x" [styles]="{'color': '#8AEB97'}" (click)="handlerRestartEvent()"></fa-icon>
+<div class="board-score-content" *ngLet="(boardScoreStateObservable |async) as boardScore">
+  <fa-icon [icon]="faPlayCircle" size="4x" [styles]="{'color': '#8AEB97'}" (click)="handlerRestartEvent()"></fa-icon>
+  <countdown #cd [config]="prettyConfig" (event)="handleCountdownEvent($event)" class="custom-style"></countdown>
+  <p *ngIf="boardScore.win" >You Win</p>
+  <p *ngIf="boardScore.lose" >You Lose</p>
+  <div class="style-to-define-content">
+    <div class="style-to-define">
+      <p>number of flags available</p>
+      <label>{{boardScore.availableMarks}}</label>
+    </div>
+
+    <div class="style-to-define">
+      <p>number of mines</p>
+      <label>{{boardScore.installedMines}}</label>
+    </div>
+  </div>
+</div>

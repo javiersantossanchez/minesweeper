@@ -1,7 +1,8 @@
 import { SquareState } from './../dtos/square-state-dto';
 import { createSelector } from '@ngrx/store';
-import { GameState, } from '../dtos/game-state';
+import { GameState, GAME_STATUS, } from '../dtos/game-state';
 import { Square } from '../entities/square';
+import { BoardScoreState } from '../dtos/board-score-state';
 
 export const getBoardGame = createSelector(
   (state: any) => state.rootState,
@@ -28,5 +29,19 @@ export const squareStatusSelector = createSelector(
 
 export const gameStatus = createSelector(
   (state: any) => state.rootState,
-  (state: GameState, props): boolean =>state.gameStatus === props.status
+  (state: GameState, props): boolean =>  state.gameStatus === props.status
+);
+
+export const boardScoreStatus = createSelector(
+  (state: any) => state.rootState,
+  (state: GameState): BoardScoreState => {
+                          return {
+                            availableMarks: state.availableMarks,
+                            installedMines: state.installedMines,
+                            numberOfOpenMines: state.numberOfOpenMines,
+                            lose:  state.gameStatus === GAME_STATUS.LOSE,
+                            win: state.gameStatus === GAME_STATUS.WIN,
+                            playing: state.gameStatus === GAME_STATUS.PLAYING,
+                          };
+            }
 );
