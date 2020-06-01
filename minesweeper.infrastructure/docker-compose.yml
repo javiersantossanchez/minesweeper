@@ -1,0 +1,8 @@
+version: '3.0'
+services:
+    minesweeper:
+        image: javier
+        container_name: Minesweeper
+        hostname: Minesweeper
+        ports:
+            - 80:80
