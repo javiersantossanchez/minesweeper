@@ -17,13 +17,18 @@ export const getGameBoardLength = createSelector(
 export const squareStatusSelector = createSelector(
   (state: any) => state.rootState,
   (state: GameState, props): SquareState  => {
-                return {  isClosed: state.gameBoard[props.row][props.column].isClosed(),
+              //TODO: a workaround to solve problem when the game board size is reduce. The stated is update before the component is destroyed, Then the selector is alive and fired the event for a square outsite of the new bord dimentions
+              if ( state.gameBoard.length <= props.row || state.gameBoard.length <= props.column) {
+                return null;
+              }
+              return {
+                          isClosed: state.gameBoard[props.row][props.column].isClosed(),
                           isOpen: state.gameBoard[props.row][props.column].isOpen(),
                           isMine: state.gameBoard[props.row][props.column].isMine(),
                           numberOfMinesAround: state.gameBoard[props.row][props.column].getNumberOfMineAround(),
                           isMarked: state.gameBoard[props.row][props.column].isMarked(),
                           isBroken: state.gameBoard[props.row][props.column].isBroken(),
-                };
+              };
   }
 );
 

@@ -1,17 +1,27 @@
+<fa-icon [icon]="faPlayCircle" size="4x" [styles]="{'color': '#8AEB97'}" (click)="handlerRestartEvent()"></fa-icon>
+<countdown #cd [config]="prettyConfig" (event)="handleCountdownEvent($event)" class="custom-style"></countdown>
+
 <div class="board-score-content" *ngLet="(boardScoreStateObservable |async) as boardScore">
-  <fa-icon [icon]="faPlayCircle" size="4x" [styles]="{'color': '#8AEB97'}" (click)="handlerRestartEvent()"></fa-icon>
-  <countdown #cd [config]="prettyConfig" (event)="handleCountdownEvent($event)" class="custom-style"></countdown>
-  <p *ngIf="boardScore.win" >You Win</p>
-  <p *ngIf="boardScore.lose" >You Lose</p>
-  <div class="style-to-define-content">
+<div class="style-to-define">
+  <input type="radio" name="levelCtrl" id="levelCtrlEasy"  value="easy" [(ngModel)]="level" (change)="handlerChangeLevelEvent()">
+  <label for="levelCtrlEasy">Easy</label>
+  <input type="radio" name="levelCtrl" id="levelCtrlMedium"  value="medium" [(ngModel)]="level" (change)="handlerChangeLevelEvent()">
+  <label for="levelCtrlMedium">Medium</label>
+  <input type="radio" name="levelCtrl" id="levelCtrlAdvance"  value="advance" [(ngModel)]="level" (change)="handlerChangeLevelEvent()">
+  <label for="levelCtrlAdvance" >Advance</label>
+</div>
+
     <div class="style-to-define">
-      <p>number of flags available</p>
+      <div class="square-marked"></div>
       <label>{{boardScore.availableMarks}}</label>
     </div>
 
     <div class="style-to-define">
-      <p>number of mines</p>
+      <div class="square-broken"></div>
       <label>{{boardScore.installedMines}}</label>
     </div>
-  </div>
+
+  <p *ngIf="boardScore.win" >You Win</p>
+  <p *ngIf="boardScore.lose" >You Lose</p>
+
 </div>

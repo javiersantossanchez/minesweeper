@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { CountdownEvent, CountdownComponent, CountdownConfig } from 'ngx-countdown';
 import { faPlayCircle } from '@fortawesome/free-solid-svg-icons';
 import { BoardScoreState } from 'src/app/dtos/board-score-state';
+import { ConfigurationService } from 'src/app/services/impl/configuration.service';
 
 @Component({
   selector: 'app-board-score',
@@ -32,7 +33,10 @@ export class BoardScoreComponent implements OnInit {
     prettyText: (text) => `<span class="test-class">${text}</span>`,
   };
 
-  constructor(private store: Store<GameState>) {}
+  public level: string = 'easy';
+
+
+  constructor(private store: Store<GameState>, private configurationService: ConfigurationService) {}
 
   ngOnInit() {
 
@@ -46,6 +50,11 @@ export class BoardScoreComponent implements OnInit {
     if (e.action === 'done') {
       this.store.dispatch(timeOutAction());
     }
+  }
+
+  handlerChangeLevelEvent() {
+    this.configurationService.changeLevel(this.level);
+    this.handlerRestartEvent();
   }
 
   handlerRestartEvent() {
