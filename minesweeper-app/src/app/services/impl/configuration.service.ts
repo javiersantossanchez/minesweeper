@@ -17,6 +17,18 @@ export class ConfigurationService {
     this.level = newLevel;
   }
 
+  public timeDuration(): number {
+
+    switch (this.level) {
+      case 'easy':
+        return environment.timeEasy;
+      case 'medium':
+        return environment.timeMedium;
+      case 'advance':
+        return environment.timeAdvance;
+    }
+  }
+
   public lengthBoard(): number {
     switch (this.level) {
       case 'easy':

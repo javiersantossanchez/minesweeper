@@ -26,12 +26,7 @@ export class BoardScoreComponent implements OnInit {
 
   faPlayCircle = faPlayCircle;
 
-  prettyConfig: CountdownConfig = {
-    notify: [2, 5],
-    leftTime: 30,
-    format: 'HH:mm:ss',
-    prettyText: (text) => `<span class="test-class">${text}</span>`,
-  };
+  prettyConfig: CountdownConfig;
 
   public level: string = 'easy';
 
@@ -39,6 +34,14 @@ export class BoardScoreComponent implements OnInit {
   constructor(private store: Store<GameState>, private configurationService: ConfigurationService) {}
 
   ngOnInit() {
+
+    this.prettyConfig = {
+      notify: [2, 5],
+      leftTime: this.configurationService.timeDuration(),
+      format: 'HH:mm:ss',
+      prettyText: (text) => `<span class="test-class">${text}</span>`,
+    };
+
 
      this.boardScoreStateObservable = this.store.select(boardScoreStatus);
      this.store.select(gameStatus, {status: GAME_STATUS.PLAYING}).subscribe( isPlaying => { if (!isPlaying) { this.countdown.pause(); } });
@@ -59,6 +62,7 @@ export class BoardScoreComponent implements OnInit {
 
   handlerRestartEvent() {
     this.store.dispatch(generateGameBoardAction());
+    this.countdown.config.leftTime = this.configurationService.timeDuration();
     this.countdown.restart();
   }
 }
