@@ -28,7 +28,7 @@ export class BoardScoreComponent implements OnInit {
 
   prettyConfig: CountdownConfig;
 
-  public level: string = 'easy';
+  public level = 'easy';
 
 
   constructor(private store: Store<GameState>, private configurationService: ConfigurationService) {}
@@ -42,9 +42,8 @@ export class BoardScoreComponent implements OnInit {
       prettyText: (text) => `<span class="test-class">${text}</span>`,
     };
 
-
-     this.boardScoreStateObservable = this.store.select(boardScoreStatus);
-     this.store.select(gameStatus, {status: GAME_STATUS.PLAYING}).subscribe( isPlaying => { if (!isPlaying) { this.countdown.pause(); } });
+    this.boardScoreStateObservable = this.store.select(boardScoreStatus);
+    this.store.select(gameStatus, {status: GAME_STATUS.PLAYING}).subscribe( isPlaying => { if (!isPlaying) { this.countdown.pause(); } });
 
 
   }
