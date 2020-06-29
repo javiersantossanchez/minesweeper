@@ -7,13 +7,47 @@ import { Injectable } from '@angular/core';
 })
 export class ConfigurationService {
 
-  constructor() { }
+  private level: string;
 
-  lengthBoard() {
-    return environment.boardLength;
+  constructor() {
+    this.level = 'easy';
+   }
+
+  public changeLevel(newLevel: string) {
+    this.level = newLevel;
   }
 
-  numberOfMines() {
-    return environment.numberOfMines;
+  public timeDuration(): number {
+
+    switch (this.level) {
+      case 'easy':
+        return environment.timeEasy;
+      case 'medium':
+        return environment.timeMedium;
+      case 'advance':
+        return environment.timeAdvance;
+    }
+  }
+
+  public lengthBoard(): number {
+    switch (this.level) {
+      case 'easy':
+        return environment.boardLengthEasy;
+      case 'medium':
+        return environment.boardLengthMedium;
+      case 'advance':
+        return environment.boardLengthAdvance;
+    }
+  }
+
+  public numberOfMines(): number {
+    switch (this.level) {
+      case 'easy':
+        return environment.numberOfMinesEasy;
+      case 'medium':
+        return environment.numberOfMinesMedium;
+      case 'advance':
+        return environment.numberOfMinesAdvance;
+    }
   }
 }

@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { CountdownEvent, CountdownComponent, CountdownConfig } from 'ngx-countdown';
 import { faPlayCircle } from '@fortawesome/free-solid-svg-icons';
 import { BoardScoreState } from 'src/app/dtos/board-score-state';
+import { ConfigurationService } from 'src/app/services/impl/configuration.service';
 
 @Component({
   selector: 'app-board-score',
@@ -25,19 +26,24 @@ export class BoardScoreComponent implements OnInit {
 
   faPlayCircle = faPlayCircle;
 
-  prettyConfig: CountdownConfig = {
-    notify: [2, 5],
-    leftTime: 30,
-    format: 'HH:mm:ss',
-    prettyText: (text) => `<span class="test-class">${text}</span>`,
-  };
+  prettyConfig: CountdownConfig;
 
-  constructor(private store: Store<GameState>) {}
+  public level = 'easy';
+
+
+  constructor(private store: Store<GameState>, private configurationService: ConfigurationService) {}
 
   ngOnInit() {
 
-     this.boardScoreStateObservable = this.store.select(boardScoreStatus);
-     this.store.select(gameStatus, {status: GAME_STATUS.PLAYING}).subscribe( isPlaying => { if (!isPlaying) { this.countdown.pause(); } });
+    this.prettyConfig = {
+      notify: [2, 5],
+      leftTime: this.configurationService.timeDuration(),
+      format: 'HH:mm:ss',
+      prettyText: (text) => `<span class="test-class">${text}</span>`,
+    };
+
+    this.boardScoreStateObservable = this.store.select(boardScoreStatus);
+    this.store.select(gameStatus, {status: GAME_STATUS.PLAYING}).subscribe( isPlaying => { if (!isPlaying) { this.countdown.pause(); } });
 
 
   }
@@ -48,8 +54,14 @@ export class BoardScoreComponent implements OnInit {
     }
   }
 
+  handlerChangeLevelEvent() {
+    this.configurationService.changeLevel(this.level);
+    this.handlerRestartEvent();
+  }
+
   handlerRestartEvent() {
     this.store.dispatch(generateGameBoardAction());
+    this.countdown.config.leftTime = this.configurationService.timeDuration();
     this.countdown.restart();
   }
 }

@@ -5,9 +5,23 @@
 export const environment = {
   production: false,
 
-  boardLength: 6,
+  boardLengthEasy: 4,
 
-  numberOfMines: 6,
+  numberOfMinesEasy: 6,
+
+  timeEasy: 30,
+
+  boardLengthMedium: 8,
+
+  numberOfMinesMedium: 20,
+
+  timeMedium: 60,
+
+  boardLengthAdvance: 12,
+
+  numberOfMinesAdvance: 40,
+
+  timeAdvance: 90,
 };
 
 /*

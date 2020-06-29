@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { squareStatusSelector, } from 'src/app/selectors';
 import { Store } from '@ngrx/store';
@@ -12,7 +12,7 @@ import { faCircle } from '@fortawesome/free-solid-svg-icons';
   templateUrl: "./square.component.html",
   styleUrls: ["./square.component.sass"]
 })
-export class SquareComponent implements OnInit {
+export class SquareComponent implements OnInit, OnDestroy  {
   @Input()
   rowIndex: number;
 
@@ -27,6 +27,10 @@ export class SquareComponent implements OnInit {
   faCircle = faCircle;
 
   constructor(private store: Store<GameState>) {}
+  ngOnDestroy(): void {
+    this.squareStatusObservable = null;
+    console.log("ok")
+  }
 
   ngOnInit() {
     this.squareStatusObservable = this.store.select(squareStatusSelector, {
