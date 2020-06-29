@@ -100,7 +100,7 @@ export class BoardGame implements BoardGameService {
 
   generateBoard(): Square[][] {
     let board: Array<Array<Square>> = this.boardGenerator.generateBoard( this.configurationService.lengthBoard());
-    if(board != null){
+    if (board != null) {
       board = this.boardGenerator.calculateNumOfMinesAround(this.boardGenerator.installMines(board, this.configurationService.numberOfMines()));
     }
     return board;

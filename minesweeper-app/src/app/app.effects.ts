@@ -14,7 +14,8 @@ import { SearchMinesResult } from './dtos/search-mines-result-dto';
 @Injectable()
 export class AppEffects {
 
-  constructor(private actions: Actions, private store: Store<GameState>, private boardGameService: BoardGameService, private configurationService: ConfigurationService) {}
+  constructor(private actions: Actions, private store: Store<GameState>, private boardGameService: BoardGameService,
+              private configurationService: ConfigurationService) {}
 
    generateBoard = createEffect(
         () => this.actions.pipe(
