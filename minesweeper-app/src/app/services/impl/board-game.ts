@@ -4,15 +4,64 @@ import { SearchMinesResult } from 'src/app/dtos/search-mines-result-dto';
 import { Square } from 'src/app/entities/square';
 import { BoardGameService } from 'src/app/services/def/board-game.service';
 import { ConfigurationService } from './configuration.service';
+import { Store } from '@ngrx/store';
+import { GameState, GAME_STATUS } from 'src/app/dtos/game-state';
+import { squareStatusSelector, gameStatus, getBoardGame1, boardScoreStatus, getBoardGame } from 'src/app/selectors';
+import { SquareState } from 'src/app/dtos/square-state-dto';
+import { Observable } from 'rxjs';
+import { BoardScoreState } from 'src/app/dtos/board-score-state';
+import { loadBoardGameAction, explodeAllMinesAction } from 'src/app/actions';
 
 
 export class BoardGame implements BoardGameService {
 
   private boardGenerator: BoardGenerator;
 
-  constructor(private configurationService: ConfigurationService) {
+  constructor(private configurationService: ConfigurationService, private store: Store<GameState>) {
     this.boardGenerator = new BoardGenerator();
   }
+
+  buildBoard(lengthBoard: number, numberOfMines: number): Square[][] {
+    let board: Array<Array<Square>> = this.boardGenerator.generateBoard(lengthBoard);
+    if (board != null) {
+      board = this.boardGenerator
+        .calculateNumOfMinesAround(this.boardGenerator.installMines(board, numberOfMines));
+    }
+    return board;
+  }
+
+  generateBoard(): Observable<any> {
+
+    const board: Array<Array<Square>>  =
+      this.buildBoard(this.configurationService.lengthBoard(), this.configurationService.numberOfMines());
+    this.store.dispatch(loadBoardGameAction({
+      boardGame: board,
+      gameBoardLength: this.configurationService.lengthBoard(),
+      availableMarks: this.configurationService.numberOfMines(),
+      installedMines: this.configurationService.numberOfMines(),
+    }));
+    return this.store.select(getBoardGame1);
+  }
+
+
+  getSquareStatus(row: number, column: number): Observable<SquareState> {
+    return this.store.select(squareStatusSelector, {row, column});
+  }
+
+  getBoardScore(): Observable<BoardScoreState> {
+    return this.store.select(boardScoreStatus);
+  }
+
+  public isPlaying(): Observable<boolean> {
+    return this.isGameStatus(GAME_STATUS.PLAYING);
+  }
+
+  private isGameStatus(status: GAME_STATUS): Observable<boolean> {
+    return this.store.select(gameStatus, {status });
+  }
+
+
+
 
   explodeAllMines(board: Square[][]): Square[][] {
     if (board === null) {
@@ -98,12 +147,6 @@ export class BoardGame implements BoardGameService {
     return searchMineDto;
   }
 
-  generateBoard(): Square[][] {
-    let board: Array<Array<Square>> = this.boardGenerator.generateBoard( this.configurationService.lengthBoard());
-    if (board != null) {
-      board = this.boardGenerator.calculateNumOfMinesAround(this.boardGenerator.installMines(board, this.configurationService.numberOfMines()));
-    }
-    return board;
-  }
+
 
 }

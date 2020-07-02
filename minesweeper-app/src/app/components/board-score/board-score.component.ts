@@ -8,6 +8,7 @@ import { CountdownEvent, CountdownComponent, CountdownConfig } from 'ngx-countdo
 import { faPlayCircle } from '@fortawesome/free-solid-svg-icons';
 import { BoardScoreState } from 'src/app/dtos/board-score-state';
 import { ConfigurationService } from 'src/app/services/impl/configuration.service';
+import { BoardGameService } from 'src/app/services/def/board-game.service';
 
 @Component({
   selector: 'app-board-score',
@@ -31,7 +32,7 @@ export class BoardScoreComponent implements OnInit {
   public level = 'easy';
 
 
-  constructor(private store: Store<GameState>, private configurationService: ConfigurationService) {}
+  constructor(private store: Store<GameState>, private boardGameService: BoardGameService, private configurationService: ConfigurationService) {}
 
   ngOnInit() {
 
@@ -42,8 +43,8 @@ export class BoardScoreComponent implements OnInit {
       prettyText: (text) => `<span class="test-class">${text}</span>`,
     };
 
-    this.boardScoreStateObservable = this.store.select(boardScoreStatus);
-    this.store.select(gameStatus, {status: GAME_STATUS.PLAYING}).subscribe( isPlaying => { if (!isPlaying) { this.countdown.pause(); } });
+    this.boardScoreStateObservable = this.boardGameService.getBoardScore();
+    this.boardGameService.isPlaying().subscribe( isPlaying => { if (!isPlaying) { this.countdown.pause(); } });
 
 
   }
@@ -60,7 +61,7 @@ export class BoardScoreComponent implements OnInit {
   }
 
   handlerRestartEvent() {
-    this.store.dispatch(generateGameBoardAction());
+    this.boardGameService.generateBoard();
     this.countdown.config.leftTime = this.configurationService.timeDuration();
     this.countdown.restart();
   }

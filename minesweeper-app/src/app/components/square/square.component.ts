@@ -6,13 +6,14 @@ import { GameState } from 'src/app/dtos/game-state';
 import { searchMinesAction, setMarkOnMineAction } from 'src/app/actions';
 import { SquareState } from 'src/app/dtos/square-state-dto';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
+import { BoardGameService } from 'src/app/services/def/board-game.service';
 
 @Component({
   selector: "app-square",
   templateUrl: "./square.component.html",
   styleUrls: ["./square.component.sass"]
 })
-export class SquareComponent implements OnInit, OnDestroy  {
+export class SquareComponent implements OnInit  {
   @Input()
   rowIndex: number;
 
@@ -26,17 +27,10 @@ export class SquareComponent implements OnInit, OnDestroy  {
 
   faCircle = faCircle;
 
-  constructor(private store: Store<GameState>) {}
-  ngOnDestroy(): void {
-    this.squareStatusObservable = null;
-    console.log("ok")
-  }
+  constructor(private store: Store<GameState>, private boardGameService: BoardGameService) {}
 
   ngOnInit() {
-    this.squareStatusObservable = this.store.select(squareStatusSelector, {
-      row: this.rowIndex,
-      column: this.columnIndex
-    });
+    this.squareStatusObservable = this.boardGameService.getSquareStatus(this.rowIndex, this.columnIndex);
   }
 
   open(): void {

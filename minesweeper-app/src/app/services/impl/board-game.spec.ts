@@ -209,7 +209,7 @@ describe('BoardGame', () => {
 
   }));
 
-  //TODO: I need implement this validation.
+  // TODO: I need implement this validation.
   // it('search mines starting in a mine', inject([BoardGameService], () => {
   //   const length = 4;
   //   let initialSquare: Array<Array<Square>> = new Array<Array<Square>>();

@@ -17,21 +17,7 @@ export class AppEffects {
   constructor(private actions: Actions, private store: Store<GameState>, private boardGameService: BoardGameService,
               private configurationService: ConfigurationService) {}
 
-   generateBoard = createEffect(
-        () => this.actions.pipe(
-              ofType(generateGameBoardAction),
-              map( () => {
-                const board: Array<Array<Square>>  = this.boardGameService.generateBoard();
-                return loadBoardGameAction({
-                                                  boardGame: board,
-                                                  gameBoardLength: this.configurationService.lengthBoard(),
-                                                  availableMarks: this.configurationService.numberOfMines(),
-                                                  installedMines: this.configurationService.numberOfMines(),
-                                                });
-                                              }
-              )
-        )
-    );
+
 
     timeOut = createEffect(
       () => this.actions.pipe(
@@ -50,7 +36,6 @@ export class AppEffects {
             ofType(searchMinesAction),
             withLatestFrom(this.store.select(getBoardGame)),
             map(([actionParam, storageResult]) => {
-                              console.log(actionParam);
                               if (storageResult[actionParam.rowIndex][actionParam.columnIndex].isMine()) {
                               const board: Array<Array<Square>>  = this.boardGameService.explodeAllMines(storageResult);
                               return explodeAllMinesAction({boardGame: board});
