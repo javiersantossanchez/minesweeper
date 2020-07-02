@@ -1,14 +1,9 @@
-import { getBoardGame } from './selectors/index';
 import { Injectable } from '@angular/core';
-import { Actions, createEffect, ofType} from '@ngrx/effects';
-import { generateGameBoardAction, loadBoardGameAction, searchMinesAction, searchMinesSuccessfulAction, explodeAllMinesAction, timeOutAction } from './actions';
-import { map, mergeMap, withLatestFrom } from 'rxjs/operators';
+import { Actions} from '@ngrx/effects';
 import { BoardGameService } from './services/def/board-game.service';
 import { GameState } from './dtos/game-state';
 import { Store } from '@ngrx/store';
-import { Square } from './entities/square';
 import { ConfigurationService } from './services/impl/configuration.service';
-import { SearchMinesResult } from './dtos/search-mines-result-dto';
 
 
 @Injectable()
@@ -19,7 +14,7 @@ export class AppEffects {
 
 
 
-    timeOut = createEffect(
+  /**   timeOut = createEffect(
       () => this.actions.pipe(
             ofType(timeOutAction),
             withLatestFrom(this.store.select(getBoardGame)),
@@ -52,6 +47,7 @@ export class AppEffects {
             )
       )
   );
+  **/
 
 }
 

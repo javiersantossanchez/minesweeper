@@ -1,8 +1,4 @@
-import { timeOutAction, generateGameBoardAction } from './../../actions/index';
-import { gameStatus, boardScoreStatus } from './../../selectors/index';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { GameState, GAME_STATUS } from 'src/app/dtos/game-state';
-import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { CountdownEvent, CountdownComponent, CountdownConfig } from 'ngx-countdown';
 import { faPlayCircle } from '@fortawesome/free-solid-svg-icons';
@@ -32,7 +28,7 @@ export class BoardScoreComponent implements OnInit {
   public level = 'easy';
 
 
-  constructor(private store: Store<GameState>, private boardGameService: BoardGameService, private configurationService: ConfigurationService) {}
+  constructor(private boardGameService: BoardGameService, private configurationService: ConfigurationService) {}
 
   ngOnInit() {
 
@@ -51,7 +47,7 @@ export class BoardScoreComponent implements OnInit {
 
   handleCountdownEvent(e: CountdownEvent) {
     if (e.action === 'done') {
-      this.store.dispatch(timeOutAction());
+     this.boardGameService.timeIsOver();
     }
   }
 

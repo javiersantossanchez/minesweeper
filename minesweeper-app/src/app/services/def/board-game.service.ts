@@ -18,16 +18,19 @@ export abstract class BoardGameService {
 
   constructor(configurationService: ConfigurationService, store: Store<GameState>) { }
 
+  abstract generateBoard(): Observable<any>;
+
+  abstract  timeIsOver();
+
+
   abstract isPlaying(): Observable<boolean>;
 
   abstract getBoardScore(): Observable<BoardScoreState>;
 
   abstract getSquareStatus(row: number, column: number): Observable<SquareState>;
 
-  abstract generateBoard(): Observable<any>;
+  abstract  markSquare(row: number, column: number): void;
 
-  abstract searchMines(boardGame: Square[][], selectedSquare: Square): SearchMinesResult;
-
-  abstract explodeAllMines(board: Square[][]): Square[][];
+  abstract  searchMines(row: number, column: number);
 
 }

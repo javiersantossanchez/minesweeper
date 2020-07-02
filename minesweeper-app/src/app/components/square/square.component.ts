@@ -27,22 +27,18 @@ export class SquareComponent implements OnInit  {
 
   faCircle = faCircle;
 
-  constructor(private store: Store<GameState>, private boardGameService: BoardGameService) {}
+  constructor(private boardGameService: BoardGameService) {}
 
   ngOnInit() {
     this.squareStatusObservable = this.boardGameService.getSquareStatus(this.rowIndex, this.columnIndex);
   }
 
   open(): void {
-    this.store.dispatch(
-      searchMinesAction({ rowIndex: this.rowIndex, columnIndex: this.columnIndex })
-    );
+    this.boardGameService.searchMines(this.rowIndex, this.columnIndex);
   }
 
   mark($event: MouseEvent): void {
     $event.preventDefault();
-    this.store.dispatch(
-      setMarkOnMineAction({ rowIndex: this.rowIndex, columnIndex: this.columnIndex })
-    );
+    this.boardGameService.markSquare( this.rowIndex, this.columnIndex);
   }
 }

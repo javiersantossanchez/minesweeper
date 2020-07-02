@@ -21,8 +21,8 @@ export const searchMinesSuccessfulAction =
                                                               numberOfNewSquareOpen: number
                                                             }>());
 
-export const explodeAllMinesAction =
-      createAction('[board-game] Explode All Mines', props<{boardGame: Array<Array<Square>>,}>());
+export const gameOverAction =
+      createAction('[board-game] Game Over', props<{boardGame: Array<Array<Square>>, }>());
 
 
 /**
@@ -34,5 +34,3 @@ export const searchMinesAction =  createAction('[board-game] search', props<{ ro
  * Action used to set mark on a square. This mark is a flag to the user
  */
 export const setMarkOnMineAction =  createAction('[board-game] set mark', props<{ rowIndex: number, columnIndex: number }>());
-
-export const timeOutAction =  createAction('[board-game] Timeout');
