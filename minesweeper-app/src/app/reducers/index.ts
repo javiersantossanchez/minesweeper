@@ -1,4 +1,4 @@
-import {  searchMinesSuccessfulAction, explodeAllMinesAction } from './../actions/index';
+import {  searchMinesSuccessfulAction, gameOverAction } from './../actions/index';
 import { createReducer, on, Action } from '@ngrx/store';
 import { GameState, GAME_STATUS } from '../dtos/game-state';
 import { loadBoardGameAction, setMarkOnMineAction } from '../actions';
@@ -24,9 +24,15 @@ const gameReducer = createReducer(initialState,
         }
     );
   }),
-  on(explodeAllMinesAction, (state, action) => {
-    return Object.assign({}, state, { gameBoard: action.boardGame, gameStatus: GAME_STATUS.LOSE});
-}),
+  on(gameOverAction, (state, action) => {
+    return Object.assign( {},
+                          state,
+                          {
+                            gameBoard: action.boardGame,
+                            gameStatus: GAME_STATUS.LOSE
+                          }
+                        );
+  }),
   on(searchMinesSuccessfulAction, (state, action) => {
       const newNumberOfOpenSquare = state.numberOfOpenMines + action.numberOfNewSquareOpen;
       let newGameStatus = state.gameStatus;
