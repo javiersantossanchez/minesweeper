@@ -1,7 +1,7 @@
 <ng-container *ngLet="(gameStatusPlayingObservable |async) as isPlaying">
   <div *ngFor="let row of gameBoardObservable |async" style="display: flex;">
     <ng-container *ngFor="let cell of row">
-      <app-square [columnIndex]="cell.column" [rowIndex]="cell.row" [isPlaying]="isPlaying"></app-square>
+      <app-square [columnIndex]="cell.columnIndex" [rowIndex]="cell.rowIndex" [isPlaying]="isPlaying"></app-square>
     </ng-container>
   </div>
 </ng-container>

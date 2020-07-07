@@ -5,13 +5,14 @@
 <ng-template #playing >
   <ng-container *ngLet="(squareStatusObservable |async) as squareStatus">
     <button
+    id="closeSquare-{{rowIndex}}-{{columnIndex}}"
     class="square-base square-clickable"
-    [ngClass]="{'square-closed': squareStatus.isClosed, 'square-marked':squareStatus.isMarked}"
+    [ngClass]="{'square-closed': squareStatus.isClosed && !squareStatus.isMarked, 'square-marked':squareStatus.isMarked}"
     (click)="open()"
     (contextmenu)="mark($event)"
     *ngIf="squareStatus.isClosed">
   </button>
-  <div (contextmenu)="$event.preventDefault()" class="square-base square-open" *ngIf="squareStatus.isOpen">
+  <div id="openSquare-{{rowIndex}}-{{columnIndex}}" (contextmenu)="$event.preventDefault()" class="square-base square-open" *ngIf="squareStatus.isOpen">
     <ng-container *ngIf="squareStatus.numberOfMinesAround > 0">
       <fa-layers [fixedWidth]="true" size="3x" style="height: 100%; width: 100%;">
         <fa-layers-text  content="{{squareStatus.numberOfMinesAround}}" style="color: #395E24;"></fa-layers-text>
@@ -25,7 +26,7 @@
 
 <ng-template #gameOver>
   <ng-container *ngLet="(squareStatusObservable |async) as squareStatus">
-    <div (contextmenu)="$event.preventDefault()"
+    <div id="generalSquare-{{rowIndex}}-{{columnIndex}}" (contextmenu)="$event.preventDefault()"
         class="square-base"
         [ngClass]="{'square-closed': squareStatus.isClosed,
                     'square-marked':squareStatus.isMarked,

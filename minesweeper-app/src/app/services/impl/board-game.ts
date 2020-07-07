@@ -1,7 +1,7 @@
+import { Square } from './../../entities/square';
 import { BoardGenerator } from './../../generators/board-generator.generator';
 
 import { SearchMinesResult } from 'src/app/dtos/search-mines-result-dto';
-import { Square } from 'src/app/entities/square';
 import { BoardGameService } from 'src/app/services/def/board-game.service';
 import { ConfigurationService } from './configuration.service';
 import { Store } from '@ngrx/store';
@@ -36,7 +36,7 @@ export class BoardGame implements BoardGameService {
 
   }
 
-  public generateBoard(): Observable<any> {
+  public generateBoard(): Observable<Square[][]> {
 
     const board: Array<Array<Square>> = this.buildBoardGame(this.confService.lengthBoard(), this.confService.numberOfMines());
 
@@ -49,7 +49,7 @@ export class BoardGame implements BoardGameService {
       })
     );
 
-    return this.store.select(getBoardGame1);
+    return this.store.select(getBoardGame);
   }
 
   timeIsOver() {

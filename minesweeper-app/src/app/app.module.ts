@@ -11,8 +11,6 @@ import { StoreModule } from '@ngrx/store';
 import { getGameReducer } from './reducers';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
-import { EffectsModule } from '@ngrx/effects';
-import { AppEffects } from './app.effects';
 import { NgLetModule } from '@ngrx-utils/store';
 import { CountdownModule } from 'ngx-countdown';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -30,7 +28,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     AppRoutingModule,
     StoreModule.forRoot({rootState: getGameReducer}),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
-    EffectsModule.forRoot([AppEffects]),
     NgLetModule,
     CountdownModule,
     FontAwesomeModule,

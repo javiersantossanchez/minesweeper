@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, flush, fakeAsync } from '@angular/core/testing';
 import { SquareComponent } from './square.component';
 import { GameState, GAME_STATUS, } from 'src/app/dtos/game-state';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
@@ -8,24 +8,21 @@ import { squareStatusSelector } from 'src/app/selectors';
 import { NgLetModule } from '@ngrx-utils/store';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FormsModule } from '@angular/forms';
+import { BoardGameService } from 'src/app/services/def/board-game.service';
+import { of } from 'rxjs';
 
 describe('SquareComponent', () => {
   let component: SquareComponent;
   let fixture: ComponentFixture<SquareComponent>;
-  let store: MockStore<GameState>;
-  let mockUsernameSelector: MemoizedSelectorWithProps<GameState, {
-    row: number;
-    column: number;
-  }, SquareState>;
-
-  const initialState: GameState = { gameBoard: [[],[],[]],
-    gameBoardLength: 0, availableMarks: 0, installedMines: 0, numberOfOpenMines: 0,gameStatus: GAME_STATUS.PLAYING};
+  const service = jasmine.createSpyObj('GenericService', ['getSquareStatus', ]);
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ SquareComponent ],
-      providers: [provideMockStore({initialState}), ],
-      imports : [ NgLetModule ],
+      providers: [{ provide: BoardGameService, useValue:  service}, ],
+      imports : [ NgLetModule, FontAwesomeModule, FormsModule, ],
     })
     .compileComponents();
   }));
@@ -33,44 +30,104 @@ describe('SquareComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SquareComponent);
     component = fixture.componentInstance;
-    store = TestBed.get( Store );
-    const value: SquareState = {
+  });
+
+  it('should create', fakeAsync(() => {
+    const s: SquareState = {
+
+      isClosed: true,
+
+      isOpen: false,
+
+      isMine: false,
+
+      numberOfMinesAround: 0,
+
+      isMarked: false,
+
+      isBroken: false,
+
+    };
+
+    service.getSquareStatus.and.returnValue(of(s));
+    fixture.detectChanges();
+    flush();
+    expect(component).toBeTruthy();
+  }));
+
+
+
+  it('a square closed show the right element ', fakeAsync(() => {
+    const s: SquareState = {
       isClosed: true,
       isOpen: false,
-      isMine: true,
+      isMine: false,
       numberOfMinesAround: 0,
       isMarked: true,
-      isBroken: false};
-    mockUsernameSelector = store.overrideSelector(
-      squareStatusSelector,
-      value
-    );
+      isBroken: false,
+    };
+
+    component.isPlaying = true;
+    component.rowIndex = 0;
+    component.columnIndex = 0;
+
+    service.getSquareStatus.and.returnValue(of(s));
     fixture.detectChanges();
-  });
+    flush();
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    const bannerElement: HTMLElement = fixture.nativeElement;
+    const p: HTMLButtonElement = bannerElement.querySelector('#closeSquare-' + component.rowIndex + '-' + component.columnIndex);
+    expect(p).toBeTruthy();
+  }));
 
-  // it('The square has numberOfMinesAround property with value higher than zero', () => {
-  //   const value: SquareState = {
-  //     isClosed: true,
-  //     isOpen: false,
-  //     isMine: true,
-  //     numberOfMinesAround: 1,
-  //     isMarked: true,
-  //     isBroken: false
-  //   };
 
-  //   mockUsernameSelector.setResult(value);
-  //   store.refreshState();
-  //   fixture.detectChanges();
-  //   const bannerElement: HTMLElement = fixture.nativeElement;
-  //   const p = bannerElement.querySelector('open-square');
-  //   console.log(p);
+  it('a square open show the right element ', fakeAsync(() => {
+    const s: SquareState = {
+      isClosed: false,
+      isOpen: true,
+      isMine: false,
+      numberOfMinesAround: 0,
+      isMarked: true,
+      isBroken: false,
+    };
 
-  //   //expect(h1.textContent).toContain('10');
+    component.isPlaying = true;
+    component.rowIndex = 0;
+    component.columnIndex = 0;
 
-  // });
+    service.getSquareStatus.and.returnValue(of(s));
+    fixture.detectChanges();
+    flush();
+
+    const bannerElement: HTMLElement = fixture.nativeElement;
+    const p: HTMLButtonElement = bannerElement.querySelector('#openSquare-' + component.rowIndex + '-' + component.columnIndex);
+
+    expect(p).toBeTruthy();
+  }));
+
+
+  it('When game is over and square is closed show the right element ', fakeAsync(() => {
+    const s: SquareState = {
+      isClosed: true,
+      isOpen: false,
+      isMine: false,
+      numberOfMinesAround: 0,
+      isMarked: false,
+      isBroken: false,
+    };
+
+    component.isPlaying = false;
+    component.rowIndex = 0;
+    component.columnIndex = 0;
+
+    service.getSquareStatus.and.returnValue(of(s));
+    fixture.detectChanges();
+    flush();
+
+    const bannerElement: HTMLElement = fixture.nativeElement;
+    const p: HTMLButtonElement = bannerElement.querySelector('#generalSquare-' + component.rowIndex + '-' + component.columnIndex);
+
+    expect(p).toBeTruthy();
+  }));
 
 });
